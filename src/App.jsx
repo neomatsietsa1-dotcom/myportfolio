@@ -162,7 +162,7 @@ const ThemeStyles = () => (
       animation: cep-grid-drift 8s linear infinite;
     }
     /* Shifts by exactly one minor-grid cell (16px, which also evenly divides the
-       80px major grid) so the loop point is invisible — it reads as one continuous
+       80px major grid) so the loop point is invisible - it reads as one continuous
        leftward scroll with no reset jump. linear + infinite = never slows, never stops. */
     @keyframes cep-grid-drift{
       0%   { background-position: -1px -1px; }
@@ -182,7 +182,7 @@ const ThemeStyles = () => (
 
     .cep-hairline{ background:var(--line); }
 
-    /* premium floating card — paper, not glass */
+    /* premium floating card - paper, not glass */
     .cep-card{
       background:var(--surface-raised);
       border:1px solid var(--line-soft);
@@ -221,7 +221,7 @@ const ThemeStyles = () => (
     .cep-btn-outline .cep-btn-icon{ transition: transform 280ms cubic-bezier(.2,.7,.2,1); }
     .cep-btn-outline:hover .cep-btn-icon{ transform:translateX(3px); }
 
-    /* clean rounded pills — no dots, no outlines */
+    /* clean rounded pills - no dots, no outlines */
     .cep-pill{
       display:inline-flex; align-items:center;
       background:var(--pill-bg); color:var(--ink-soft);
@@ -252,7 +252,7 @@ const ThemeStyles = () => (
     }
     .cep-icon-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--accent); color:var(--accent-ink); }
 
-    /* hero-only engineering watermarks — ambient sine-wave drift, plus a cursor-repel
+    /* hero-only engineering watermarks - ambient sine-wave drift, plus a cursor-repel
        spring blended in on top. Both are driven from one rAF loop per watermark and
        only ever touch transform, so they're compositor-only (no layout, no paint of
        surrounding content). */
@@ -264,7 +264,7 @@ const ThemeStyles = () => (
     [data-theme="dark"] .cep-watermark{ opacity:0.1; color:#C9CCC3; }
     .cep-watermark-svg{ display:block; width:100%; height:auto; }
 
-    /* CAD crosshair cursor — Hero only. The OS cursor is swapped for a full
+    /* CAD crosshair cursor - Hero only. The OS cursor is swapped for a full
        crosshair + live coordinate readout, hero-centre-as-origin, while the
        mouse is over the section. Fine-pointer devices only (no-op on touch). */
     @media (hover: hover) and (pointer: fine){
@@ -284,7 +284,7 @@ const ThemeStyles = () => (
       border-radius:2px; padding:2px 6px; will-change:transform;
     }
 
-    /* self-authored responsive gate — does not depend on Tailwind's pre-built breakpoint set */
+    /* self-authored responsive gate - does not depend on Tailwind's pre-built breakpoint set */
     .cep-watermark-responsive{ display:none; }
     @media (min-width: 900px){ .cep-watermark-responsive{ display:block; } }
 
@@ -329,10 +329,14 @@ function useReveal() {
   return [ref, inView];
 }
 
-const Reveal = ({ as: Tag = "div", className = "", delay = 0, children }) => {
+/* ------------------------------------------------------------------ */
+/* Reveal component (updated to forward standard HTML id attribute)   */
+/* ------------------------------------------------------------------ */
+const Reveal = ({ as: Tag = "div", id, className = "", delay = 0, children }) => {
   const [ref, inView] = useReveal();
   return (
     <Tag
+      id={id}
       ref={ref}
       className={`cep-reveal ${inView ? "cep-in" : ""} ${className}`}
       style={{ transitionDelay: inView ? `${delay}ms` : "0ms" }}
@@ -343,7 +347,7 @@ const Reveal = ({ as: Tag = "div", className = "", delay = 0, children }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* ImageSlot — drop a file into /public/images and reference it by      */
+/* ImageSlot - drop a file into /public/images and reference it by      */
 /* filename (e.g. src="/images/profile.jpg"). If the file isn't there   */
 /* yet, it quietly shows the original dashed placeholder look instead   */
 /* of a broken-image icon, so nothing looks broken while you're still   */
@@ -372,23 +376,23 @@ const ImageSlot = ({ src, alt = "", className = "", placeholder = "Photo placeho
 };
 
 /* ------------------------------------------------------------------ */
-/* Watermarks — engineering line-art, hero-only.                       */
+/* Watermarks - engineering line-art, hero-only.                       */
 /*                                                                      */
 /* Two motions are blended into a single transform, written from one   */
 /* rAF loop per illustration:                                          */
-/*   1) ambient drift — a continuous sine wave on x/y/rotation, so     */
+/*   1) ambient drift - a continuous sine wave on x/y/rotation, so     */
 /*      each illustration is always gently alive, like dust settling. */
-/*   2) cursor repel — a critically-damped spring (no bounce, no       */
+/*   2) cursor repel - a critically-damped spring (no bounce, no       */
 /*      overshoot) that nudges the illustration away from the cursor   */
 /*      and lets it ease back into its drift path when the cursor      */
-/*      leaves — never a hard snap either way.                         */
+/*      leaves - never a hard snap either way.                         */
 /*                                                                      */
 /* Only `transform` (translate3d + rotate) is ever touched, so this is */
 /* compositor-only: no layout thrash, no repaint of surrounding DOM.   */
 /* ------------------------------------------------------------------ */
 
 // Deterministic per-instance variety (different speed/phase/amplitude per
-// illustration) from a single small integer, so call sites stay simple —
+// illustration) from a single small integer, so call sites stay simple -
 // no need to hand-roll five numbers per watermark.
 function seededDrift(seed) {
   const rand = (n) => {
@@ -396,10 +400,10 @@ function seededDrift(seed) {
     return x - Math.floor(x);
   };
   return {
-    ampX: 46 + rand(1) * 18, // ~±46–64px — larger roam distance, same cycle length below
+    ampX: 46 + rand(1) * 18, // ~±46–64px - larger roam distance, same cycle length below
     ampY: 46 + rand(2) * 18, // ~±46–64px
     ampRot: 1 + rand(3) * 1, // up to ±2°
-    period: 12 + rand(4) * 8, // 12–20s per full cycle — speed unchanged
+    period: 12 + rand(4) * 8, // 12–20s per full cycle - speed unchanged
     phaseX: rand(5) * Math.PI * 2,
     phaseY: rand(6) * Math.PI * 2,
     phaseRot: rand(7) * Math.PI * 2,
@@ -464,7 +468,7 @@ function useAmbientWatermark({ seed = 0, maxOffset = 18, radius = 220, cursorEna
       lastTime = now;
       const t = (now - start) / 1000;
 
-      // 1) ambient sine-wave drift — always running
+      // 1) ambient sine-wave drift - always running
       const floatX = ampX * Math.sin(t * omega + phaseX);
       const floatY = ampY * Math.sin(t * omega + phaseY);
       const floatRot = ampRot * Math.sin(t * omega + phaseRot);
@@ -508,7 +512,7 @@ function useAmbientWatermark({ seed = 0, maxOffset = 18, radius = 220, cursorEna
 }
 
 /* ==================================================================== */
-/* Engineering SVG library — supplied by the user (WatermarkLibrary.jsx) */
+/* Engineering SVG library - supplied by the user (WatermarkLibrary.jsx) */
 /* and inlined here verbatim (only the per-file `export` keywords were  */
 /* dropped, since this file has a single default export at the bottom). */
 /* Animation, floating, and cursor-repel logic below is untouched.      */
@@ -941,7 +945,7 @@ const ALL_WATERMARKS = [
   SurveyTripod, TopographicContours, BridgeElevation, TowerCrane, RetainingWall
 ];
 // Build the variant lookup the existing Watermark component/composition
-// generator already expects, sourced directly from ALL_WATERMARKS —
+// generator already expects, sourced directly from ALL_WATERMARKS -
 // nothing about how variants are selected, placed, or animated changes.
 const WATERMARK_VARIANTS = Object.fromEntries(ALL_WATERMARKS.map((Comp) => [Comp.name, Comp]));
 const WATERMARK_KEYS = Object.keys(WATERMARK_VARIANTS);
@@ -972,7 +976,7 @@ const Watermark = ({ variant = "BeamUDL", className = "", size = 160, top, left,
             sizing rule (the library's own <svg> has no width/height, so without this it
             would render at the browser's 300x150 default and ignore the `size` prop).
             stroke="currentColor" overrides the library's hardcoded #30332E so these
-            drawings keep following the site's existing light/dark watermark color —
+            drawings keep following the site's existing light/dark watermark color -
             none of the user's line art is altered, just the two attributes needed to
             slot into the existing CSS-driven sizing/theming system. */}
         <Comp
@@ -986,10 +990,10 @@ const Watermark = ({ variant = "BeamUDL", className = "", size = 160, top, left,
 };
 
 /* ------------------------------------------------------------------ */
-/* CAD crosshair cursor — Hero only. Swaps the OS pointer for a full     */
+/* CAD crosshair cursor - Hero only. Swaps the OS pointer for a full     */
 /* crosshair with a live coordinate readout while hovering the section,  */
 /* origin (0,0) at the Hero's centre. Position is written straight to    */
-/* transform/textContent from a rAF-throttled mousemove handler — no     */
+/* transform/textContent from a rAF-throttled mousemove handler - no     */
 /* React state, so it never touches layout or triggers a re-render.      */
 /* ------------------------------------------------------------------ */
 function useCadCrosshair(containerRef) {
@@ -1081,7 +1085,7 @@ const STATS = [
 
 const EDUCATION = [
   {
-    year: "2022 — 2025",
+    year: "2022 - 2025",
     title: "BSc Eng (Civil)",
     place: "University of the Witwatersrand",
     detail:
@@ -1101,7 +1105,7 @@ const VALUES = [
     detail:(
     <>
       I enjoy understanding how things work and asking why before deciding what should change.{" "}
-      <em>"The important thing is not to stop questioning."</em> — Albert
+      <em>"The important thing is not to stop questioning."</em> - Albert
       Einstein.
     </>
   ),
@@ -1126,10 +1130,10 @@ const VALUES = [
 const PROJECTS = [
   {
     id: "protea-glen",
-    image: "/images/FullProtea.png",
+    image: "/images/FullProtea.webp",
     icon: Compass,
     category: "Transport Planning / Master Plan",
-    title: "Protea Glen Transport Master Plan — Gauteng",
+    title: "Protea Glen Transport Master Plan - Gauteng",
     summary:
       "A precinct-wide transport master plan identifying short, medium and long-term interventions for Protea Glen, from capacity analysis through to implementation phasing.",
     role: "Contributing engineer, OAR Consultants",
@@ -1155,14 +1159,14 @@ const PROJECTS = [
     results:
       "Delivered a phased intervention plan and supporting capacity analysis and mapping as part of the OAR Consultants project team.",
     lessons:
-      "Master planning at precinct scale sharpened how I prioritise — not every constraint can be solved at once, and sequencing is itself a design decision.",
+      "Master planning at precinct scale sharpened how I prioritise - not every constraint can be solved at once, and sequencing is itself a design decision.",
   },
   {
     id: "road-alignment",
     image: "/images/Horiz+Vert.png",
     icon: Ruler,
     category: "Transportation Engineering / Road Design",
-    title: "Road Alignment Design — SANRAL Guidelines",
+    title: "Road Alignment Design - SANRAL Guidelines",
     summary:
       "An academic road alignment design exercise, developing horizontal and vertical geometry in Civil 3D to SANRAL design standards.",
     role: "Design engineer (academic project)",
@@ -1196,7 +1200,7 @@ const PROJECTS = [
      image2: "/images/Site2.jpg",
     icon: Waves,
     category: "Infrastructure / Access Road Design",
-    title: "Mandlakazi Road Design — Zululand Municipality, KZN",
+    title: "Mandlakazi Road Design - Zululand Municipality, KZN",
     summary:
       "Design support for a construction access road to a water reservoir and pump station, routed across steep terrain with slopes up to 30°.",
     role: "Contributing engineer, OAR Consultants",
@@ -1205,7 +1209,7 @@ const PROJECTS = [
     overview:
       "An access road connecting a planned water reservoir and pump station in Zululand Municipality, designed to be constructible across genuinely steep terrain.",
     problem:
-      "The site's 30° slopes made a straightforward alignment infeasible — the road needed to be buildable by construction plant while keeping earthworks manageable.",
+      "The site's 30° slopes made a straightforward alignment infeasible - the road needed to be buildable by construction plant while keeping earthworks manageable.",
     objectives: [
       "Optimise horizontal and vertical alignment across steep terrain",
       "Keep the road constructible for standard earthmoving plant",
@@ -1216,7 +1220,7 @@ const PROJECTS = [
     decisions:
       "Alignment options were tested against maximum achievable grade and cut/fill balance before settling on a route that avoided the steepest sections of the site.",
     challenges:
-      "The 30° terrain meant conventional alignment approaches produced grades that were impractical to construct — the geometry had to be reworked around the slope, not against it.",
+      "The 30° terrain meant conventional alignment approaches produced grades that were impractical to construct - the geometry had to be reworked around the slope, not against it.",
     solutions:
       "Reworked the alignment to follow the terrain's natural contours more closely, reducing cut/fill volumes while keeping grades within a constructible range.",
     results:
@@ -1226,10 +1230,13 @@ const PROJECTS = [
   },
   {
     id: "rc-building",
-    image: "/images/FullProtea.png",
+    image3: "/images/Column.png",
+    image: "/images/Floor Slab.png",
+        image2: "/images/Foundation.png",
+
     icon: Layers,
     category: "Reinforced Concrete Design",
-    title: "Multi-Storey Building — Reinforced Concrete Design",
+    title: "Multi-Storey Building - Reinforced Concrete Design",
     summary:
       "Design of a multi-storey building to SANS codes, covering load calculations and slab and reinforcement detailing in Prokon and AutoCAD.",
     role: "Design engineer (academic project)",
@@ -1259,20 +1266,20 @@ const PROJECTS = [
   },
   {
     id: "tsf",
-    image: "/images/TSFLayout.png",
-    image2: "/images/TSFPhoto.jpeg",
+    image: "/images/TSFLayout.webp",
+    image2: "/images/TSFPhoto.webp",
     icon: GraduationCap,
     category: "Final Year Project / Geotechnical",
-    title: "Tailings Storage Facility — Upstream Design",
+    title: "Tailings Storage Facility - Upstream Design",
     summary:
       "Final-year design of an upstream tailings storage facility, using Civil 3D for geometry and RocScience Slide2 for seepage and slope stability analysis.",
     role: "Researcher / designer",
-    duration: "University of the Witwatersrand — final year",
+    duration: "University of the Witwatersrand - final year",
     software: ["Civil 3D", "AutoCAD","RocScience Slide2"],
     overview:
       "A final-year geotechnical design project developing an upstream tailings storage facility (TSF), from embankment geometry through to seepage and slope stability analysis.",
     problem:
-      "An upstream TSF design has to satisfy both geometric constructability and geotechnical stability — seepage and slope failure are the two risks that most commonly govern this type of structure.",
+      "An upstream TSF design has to satisfy both geometric constructability and geotechnical stability - seepage and slope failure are the two risks that most commonly govern this type of structure.",
     objectives: [
       "Develop embankment and facility geometry in Civil 3D",
       "Model seepage behaviour through the embankment",
@@ -1295,7 +1302,7 @@ const PROJECTS = [
     id: "school-tia",
         icon: HardHat,
     category: "Traffic Impact Assessment / Master Plan",
-    title: "School for the Deaf and Blind — TIA & Masterplan, Mpumalanga",
+    title: "School for the Deaf and Blind - TIA & Masterplan, Mpumalanga",
     summary:
       "A Traffic Impact Assessment and masterplan for a special-needs school, focused on pedestrian pathways, traffic calming and inclusive access.",
     role: "Contributing engineer, OAR Consultants",
@@ -1321,14 +1328,14 @@ const PROJECTS = [
     results:
       "Delivered a TIA and masterplan input addressing both traffic impact and inclusive pedestrian access for the school.",
     lessons:
-      "This project changed how I think about 'standard' TIA guidance — the end user should shape the solution, not just the traffic count.",
+      "This project changed how I think about 'standard' TIA guidance - the end user should shape the solution, not just the traffic count.",
   },
   {
     id: "tshivhulani",
 
     icon: Building2,
     category: "Traffic Impact Assessment",
-    title: "Tshivhulani Mall — Traffic Impact Assessment, Limpopo",
+    title: "Tshivhulani Mall - Traffic Impact Assessment, Limpopo",
     summary:
       "A Traffic Impact Assessment for a proposed retail mall, including peak-hour intersection simulations and mitigation measures.",
     role: "Contributing engineer, OAR Consultants",
@@ -1354,7 +1361,7 @@ const PROJECTS = [
     results:
       "Delivered a TIA with peak-hour simulation results and mitigation recommendations for the proposed development.",
     lessons:
-      "Retail TIAs taught me to be precise about trip-generation assumptions — small errors there compound quickly through an intersection simulation.",
+      "Retail TIAs taught me to be precise about trip-generation assumptions - small errors there compound quickly through an intersection simulation.",
   },
 ];
 
@@ -1400,10 +1407,10 @@ const SKILL_GROUPS = [
 
 const EXPERIENCE = [
   {
-    year: "Feb 2026 — Present",
+    year: "Feb 2026 - Present",
     title: "Civil Engineering Intern, OAR Consultants (formerly Koleko Solutions)",
     detail:
-      "Supporting transport planning and traffic engineering projects — TIAs, masterplans, parking studies, road closures and BRT integrated transport planning. Site visits, traffic surveys and Traffix analysis, layouts in AutoCAD and GIS, and technical reports, tenders and proposals.",
+      "Supporting transport planning and traffic engineering projects - TIAs, masterplans, parking studies, road closures and BRT integrated transport planning. Site visits, traffic surveys and Traffix analysis, layouts in AutoCAD and GIS, and technical reports, tenders and proposals.",
     tag: "Internship",
   },
   {
@@ -1413,19 +1420,19 @@ const EXPERIENCE = [
     tag: "Leadership",
   },
   {
-    year: "Aug — Sep 2025",
+    year: "Aug - Sep 2025",
     title: "Geotechnical Lab Assistant, University of the Witwatersrand",
     detail: "Supported a master's research project on pavement design for heavy-duty mine trucks, running CBR and UCS soil and material testing.",
     tag: "Research",
   },
   {
-    year: "Jul — Oct 2025",
+    year: "Jul - Oct 2025",
     title: "Vacation Work, University of the Witwatersrand",
-    detail: "Worked with the Head of School to extend and optimise a rainwater harvesting system — design improvements, performance monitoring and remote monitoring via CR-Basic programming. Also curated the Cement & Concrete SA archive for the school.",
+    detail: "Worked with the Head of School to extend and optimise a rainwater harvesting system - design improvements, performance monitoring and remote monitoring via CR-Basic programming. Also curated the Cement & Concrete SA archive for the school.",
     tag: "Research",
   },
   {
-    year: "Apr 2021 — Feb 2022",
+    year: "Apr 2021 - Feb 2022",
     title: "Assistant Teacher, Shudintlhe Intermediate School",
     detail: "Supported classroom teaching and learner development ahead of starting university.",
     tag: "Teaching",
@@ -1433,12 +1440,12 @@ const EXPERIENCE = [
 ];
 
 const CERTIFICATIONS = [
-  { title: "ECSA Candidate Engineer (Civil) — Reg. No. 20262010815", org: "ECSA", year: "Active" },
+  { title: "ECSA Candidate Engineer (Civil) - Reg. No. 20262010815", org: "ECSA", year: "Active" },
   { title: "AutoCAD Autodesk Certified Professional", org: "Udemy", year: "Completed" },
-  { title: "Certificates of Distinction — Engineering Physics, Mathematics & Ethics", org: "University of the Witwatersrand", year: "2022" },
+  { title: "Certificates of Distinction - Engineering Physics, Mathematics & Ethics", org: "University of the Witwatersrand", year: "2022" },
   { title: "Knockando Certificate of Excellence", org: "University of the Witwatersrand", year: "2022" },
   { title: "1st Place, Wits Esports FC League", org: "Wits Esports", year: "2024 & 2025" },
-  { title: "USSA E-Sports Competition — Qualified Representative", org: "University Sport South Africa", year: "2024 & 2025" },
+  { title: "USSA E-Sports Competition - Qualified Representative", org: "University Sport South Africa", year: "2024 & 2025" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -1473,7 +1480,7 @@ const ProgressBar = ({ level, delay }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* Title block — signature element, fixed corner drawing stamp         */
+/* Title block - signature element, fixed corner drawing stamp         */
 /* ------------------------------------------------------------------ */
 const TitleBlock = ({ activeSection, dark }) => {
   const idx = Math.max(0, NAV_ITEMS.findIndex((n) => n.id === activeSection));
@@ -1614,13 +1621,13 @@ const Nav = ({ active, onNavigate, dark, setDark }) => {
 /* Hero                                                                 */
 /* ------------------------------------------------------------------ */
 /* ------------------------------------------------------------------ */
-/* Hero watermark composition — a fresh random arrangement every time  */
+/* Hero watermark composition - a fresh random arrangement every time  */
 /* the Hero mounts (i.e. every page load/refresh): which drawings show */
 /* up, where, at what size, starting tilt, and drift seed. Nothing is  */
-/* pinned to the edges — drawings are free to land anywhere in the     */
+/* pinned to the edges - drawings are free to land anywhere in the     */
 /* section, including behind the heading, buttons, and cards.          */
 /*                                                                      */
-/* The INITIAL layout is grid-based (jittered), not purely random —    */
+/* The INITIAL layout is grid-based (jittered), not purely random -    */
 /* that's what guarantees even spread with no clustering and no        */
 /* overlap at load time. Once floating starts, drawings drift freely   */
 /* and are allowed to cross paths, per spec.                           */
@@ -1639,7 +1646,7 @@ function generateHeroComposition() {
 
   const cellW = 100 / cols;
   const cellH = 100 / rows;
-  const jitter = 0.3; // fraction of cell size — keeps each drawing inside its own cell, so no initial overlap
+  const jitter = 0.3; // fraction of cell size - keeps each drawing inside its own cell, so no initial overlap
 
   return chosenCells.map((cell, i) => {
     const variant = shuffledVariants[i % shuffledVariants.length];
@@ -1663,8 +1670,8 @@ const Hero = ({ onNavigate }) => {
   const [composition] = useState(generateHeroComposition);
   const heroRef = useRef(null);
   return (
-<section id="home" ref={heroRef} className="relative w-full min-h-[100dvh] max-h-[100dvh] pt-40 md:pt-66 pb-16 overflow-hidden cep-blueprint-bg cep-hero-clip">
-    {/* CAD crosshair — replaces the OS cursor with a full crosshair + live
+<section id="home" ref={heroRef} className="relative w-full h-[100dvh] max-h-[100dvh] pt-24 flex flex-col overflow-hidden cep-blueprint-bg cep-hero-clip">
+    {/* CAD crosshair - replaces the OS cursor with a full crosshair + live
         X/Y readout (Hero centre = 0,0) while hovering this section. Pure
         transform/textContent writes from a rAF loop; no re-renders. */}
     <CadCrosshair containerRef={heroRef} />
@@ -1673,7 +1680,7 @@ const Hero = ({ onNavigate }) => {
     <div className="hidden md:block absolute top-24 left-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>A</div>
     <div className="hidden md:block absolute top-24 right-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>B</div>
 
-    {/* engineering watermarks — scattered freely across the whole Hero (not pinned
+    {/* engineering watermarks - scattered freely across the whole Hero (not pinned
         to edges), drifting continuously via sine-wave motion and easing away from
         the cursor within ~240px via a critically-damped spring blended on top of
         the drift. cep-hero-clip keeps everything inside the section regardless of
@@ -1691,7 +1698,7 @@ const Hero = ({ onNavigate }) => {
       />
     ))}
 
-    <div className="max-w-6xl mx-auto px-5 md:px-8 relative" style={{ zIndex: 2 }}>
+    <div className="max-w-6xl w-full mx-auto my-auto px-5 md:px-8 relative" style={{ zIndex: 2 }}>
       <Reveal>
         <div className="flex items-center gap-3 mb-6 font-mono text-xs tracking-widest uppercase" style={{ color: "var(--accent-ink)" }}>
           <Compass size={14} />
@@ -1767,10 +1774,10 @@ const About = () => (
       <div className="grid md:grid-cols-5 gap-12 mt-8">
         <Reveal className="md:col-span-2" delay={60}>
           <ImageSlot
-            src="/images/GraduationPotrait.jpg"
+            src="/images/GraduationPotrait2.jpg"
             alt="Portrait"
             className="aspect-[4/5] w-full cep-card overflow-hidden"
-            placeholder="Photo placeholder — 4:5. Add public/images/profile.jpg to fill this."
+            placeholder="Photo placeholder - 4:5. Add public/images/profile.jpg to fill this."
           />
           <div className="mt-6 space-y-3">
             {EDUCATION.map((e) => (
@@ -1866,32 +1873,64 @@ const About = () => (
 /* ------------------------------------------------------------------ */
 /* Projects                                                             */
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* Projects                                                           */
+/* ------------------------------------------------------------------ */
 const ProjectCard = ({ project, open, onToggle, delay }) => {
   const Icon = project.icon;
   return (
-    <Reveal delay={delay} className="cep-card cep-card-hover">
+    <Reveal
+      id={`project-card-${project.id}`}
+      delay={delay}
+      className="cep-card cep-card-hover scroll-mt-24"
+    >
       <div className="p-6 md:p-7">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ border: "1px solid var(--line)", color: "var(--accent-ink)", background: "var(--pill-bg)" }}>
+            <span
+              className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{
+                border: "1px solid var(--line)",
+                color: "var(--accent-ink)",
+                background: "var(--pill-bg)",
+              }}
+            >
               <Icon size={18} />
             </span>
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em]" style={{ color: "var(--accent-ink)" }}>{project.category}</div>
-              <h3 className="font-display font-bold text-2xl mt-1.5 leading-snug tracking-tight" style={{ color: "var(--ink)" }}>{project.title}</h3>
+              <div
+                className="font-mono text-[10px] uppercase tracking-[0.12em]"
+                style={{ color: "var(--accent-ink)" }}
+              >
+                {project.category}
+              </div>
+              <h3
+                className="font-display font-bold text-2xl mt-1.5 leading-snug tracking-tight"
+                style={{ color: "var(--ink)" }}
+              >
+                {project.title}
+              </h3>
             </div>
           </div>
           <button
             onClick={onToggle}
             aria-expanded={open}
             className="cep-focus cep-icon-btn flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full"
-            style={{ color: open ? "var(--accent-ink)" : "var(--ink-faint)", borderColor: open ? "var(--accent)" : "var(--line)" }}
+            style={{
+              color: open ? "var(--accent-ink)" : "var(--ink-faint)",
+              borderColor: open ? "var(--accent)" : "var(--line)",
+            }}
           >
             {open ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
           </button>
         </div>
 
-        <p className="mt-4 text-sm leading-[1.75]" style={{ color: "var(--ink-soft)" }}>{project.summary}</p>
+        <p
+          className="mt-4 text-sm leading-[1.75]"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          {project.summary}
+        </p>
 
         <div className="mt-5 flex flex-wrap gap-2">
           {project.software.map((s) => (
@@ -1906,13 +1945,22 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
           style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
         >
           <div className="min-h-0">
-            <div className="mt-6 pt-6 space-y-5" style={{ borderTop: "1px solid var(--line-soft)" }}>
+            <div
+              className="mt-6 pt-6 space-y-5"
+              style={{ borderTop: "1px solid var(--line-soft)" }}
+            >
+              <DynamicImageGallery project={project} />
 
-          <DynamicImageGallery project={project} />
-            
-              <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs" style={{ color: "var(--ink-faint)" }}>
-                <div>ROLE — <span style={{ color: "var(--ink-soft)" }}>{project.role}</span></div>
-                <div>DURATION — <span style={{ color: "var(--ink-soft)" }}>{project.duration}</span></div>
+              <div
+                className="grid sm:grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs"
+                style={{ color: "var(--ink-faint)" }}
+              >
+                <div>
+                  ROLE - <span style={{ color: "var(--ink-soft)" }}>{project.role}</span>
+                </div>
+                <div>
+                  DURATION - <span style={{ color: "var(--ink-soft)" }}>{project.duration}</span>
+                </div>
               </div>
 
               <ProjectField label="Overview" text={project.overview} />
@@ -1924,8 +1972,6 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
               <ProjectField label="Solutions" text={project.solutions} />
               <ProjectField label="Results" text={project.results} />
               <ProjectField label="Lessons learned" text={project.lessons} />
-
-          
             </div>
           </div>
         </div>
@@ -1936,18 +1982,35 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
 
 const ProjectField = ({ label, text }) => (
   <div>
-    <div className="font-mono text-[11px] uppercase tracking-widest mb-1" style={{ color: "var(--ink-faint)" }}>{label}</div>
-    <p className="text-sm leading-[1.75]" style={{ color: "var(--ink-soft)" }}>{text}</p>
+    <div
+      className="font-mono text-[11px] uppercase tracking-widest mb-1"
+      style={{ color: "var(--ink-faint)" }}
+    >
+      {label}
+    </div>
+    <p className="text-sm leading-[1.75]" style={{ color: "var(--ink-soft)" }}>
+      {text}
+    </p>
   </div>
 );
 
 const ProjectFieldList = ({ label, items }) => (
   <div>
-    <div className="font-mono text-[11px] uppercase tracking-widest mb-1.5" style={{ color: "var(--ink-faint)" }}>{label}</div>
+    <div
+      className="font-mono text-[11px] uppercase tracking-widest mb-1.5"
+      style={{ color: "var(--ink-faint)" }}
+    >
+      {label}
+    </div>
     <ul className="space-y-1">
       {items.map((it) => (
-        <li key={it} className="text-sm flex gap-2" style={{ color: "var(--ink-soft)" }}>
-          <span style={{ color: "var(--accent)" }}>—</span>{it}
+        <li
+          key={it}
+          className="text-sm flex gap-2"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          <span style={{ color: "var(--accent)" }}>-</span>
+          {it}
         </li>
       ))}
     </ul>
@@ -1956,17 +2019,62 @@ const ProjectFieldList = ({ label, items }) => (
 
 const Projects = () => {
   const [openId, setOpenId] = useState(PROJECTS[0].id);
+
+  const handleToggleCard = (targetId) => {
+    const isOpening = openId !== targetId;
+    setOpenId(isOpening ? targetId : null);
+
+    if (isOpening) {
+      setTimeout(() => {
+        const el = document.getElementById(`project-card-${targetId}`);
+        if (!el) return;
+
+        const navHeight = 96; // ~96px clearance for your sticky navbar + breathing room
+        const startTime = performance.now();
+        const duration = 500; // Matches your 500ms grid overflow transition
+
+        // This animation loop actively tracks the top of the card every frame
+        // as the previous card collapses, ensuring it never overshoots.
+        const lockScrollToCard = (now) => {
+          const rect = el.getBoundingClientRect();
+          const offset = rect.top - navHeight;
+
+          // Only nudge if it's off by more than 1px to prevent jitter
+          if (Math.abs(offset) > 1) {
+            window.scrollBy({ top: offset, behavior: "auto" });
+          }
+
+          if (now - startTime < duration) {
+            requestAnimationFrame(lockScrollToCard);
+          }
+        };
+
+        requestAnimationFrame(lockScrollToCard);
+      }, 10);
+    }
+  };
+
   return (
     <section id="projects" className="relative py-28 md:py-40 overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 md:px-8 relative">
-        <Reveal><SectionEyebrow index={3} total={8}>Projects</SectionEyebrow></Reveal>
+        <Reveal>
+          <SectionEyebrow index={3} total={8}>
+            Projects
+          </SectionEyebrow>
+        </Reveal>
         <Reveal delay={60}>
-          <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
+          <h2
+            className="font-display text-3xl md:text-4xl font-semibold max-w-2xl"
+            style={{ color: "var(--ink)" }}
+          >
             Case studies, not just a gallery.
           </h2>
-          <p className="mt-4 max-w-xl leading-relaxed" style={{ color: "var(--ink-soft)" }}>
+          <p
+            className="mt-4 max-w-xl leading-relaxed"
+            style={{ color: "var(--ink-soft)" }}
+          >
             Seven projects spanning transport planning, geotechnical and
-            structural design — each one expands into the full brief,
+            structural design - each one expands into the full brief,
             process and outcome.
           </p>
         </Reveal>
@@ -1977,7 +2085,7 @@ const Projects = () => {
               key={p.id}
               project={p}
               open={openId === p.id}
-              onToggle={() => setOpenId(openId === p.id ? null : p.id)}
+              onToggle={() => handleToggleCard(p.id)}
               delay={i * 40}
             />
           ))}
@@ -2097,19 +2205,20 @@ const Resume = () => (
       <div className="grid md:grid-cols-3 gap-10 mt-8">
         <Reveal className="md:col-span-1">
           <h2 className="font-display text-3xl font-semibold" style={{ color: "var(--ink)" }}>
-            One page. Everything a recruiter needs.
+            A concise summary. The full story is one click away.
           </h2>
           <p className="mt-4 text-sm leading-[1.75]" style={{ color: "var(--ink-soft)" }}>
-            Replace the button below with a link to your actual PDF once it's
-            hosted, then keep this preview in sync with it.
+            Download a copy of my updated CV.
           </p>
-          <button
+          <a
+            href="/CV - Neo Matsietsa.pdf"
+            download="CV - Neo Matsietsa.pdf"
             className="cep-btn-primary cep-focus mt-6 px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
           >
             <Download size={15} className="cep-btn-icon" /> Download PDF
-          </button>
+          </a>
           <p className="mt-3 font-mono text-[11px]" style={{ color: "var(--ink-faint)" }}>
-            resume.pdf — placeholder link
+            CV - Neo Matsietsa.pdf
           </p>
         </Reveal>
 
@@ -2323,7 +2432,7 @@ const Footer = () => (
   <footer className="py-10" style={{ borderTop: "1px solid var(--line)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]" style={{ color: "var(--ink-faint)" }}>
       <span>© {new Date().getFullYear()} Neo Matsietsa. Drawing set for informational purposes only.</span>
-      <span>Built with React &amp; Tailwind — DWG REV 0</span>
+      <span>Built with React &amp; Tailwind - DWG REV 0</span>
     </div>
   </footer>
 );

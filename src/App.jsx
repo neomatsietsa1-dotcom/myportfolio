@@ -1546,7 +1546,7 @@ const Nav = ({ active, onNavigate, dark, setDark }) => {
           >
             NM
           </span>
-          <span className="text-sm">Neo Matsietsa — Civil Engineering</span>
+          <span className="text-sm">Neo Matsietsa</span>
         </button>
 
         <nav className="hidden md:flex items-center gap-7">
@@ -1663,7 +1663,7 @@ const Hero = ({ onNavigate }) => {
   const [composition] = useState(generateHeroComposition);
   const heroRef = useRef(null);
   return (
-  <section id="home" ref={heroRef} className="relative pt-32 pb-24 md:pt-44 md:pb-32 cep-blueprint-bg cep-hero-clip">
+<section id="home" ref={heroRef} className="relative w-full min-h-[100dvh] max-h-[100dvh] pt-40 md:pt-66 pb-16 overflow-hidden cep-blueprint-bg cep-hero-clip">
     {/* CAD crosshair — replaces the OS cursor with a full crosshair + live
         X/Y readout (Hero centre = 0,0) while hovering this section. Pure
         transform/textContent writes from a rAF loop; no re-renders. */}
@@ -1695,7 +1695,7 @@ const Hero = ({ onNavigate }) => {
       <Reveal>
         <div className="flex items-center gap-3 mb-6 font-mono text-xs tracking-widest uppercase" style={{ color: "var(--accent-ink)" }}>
           <Compass size={14} />
-          ECSA Candidate Engineer — Transport &amp; Infrastructure
+          ECSA Candidate Engineer (Civil)
           <span className="inline-flex items-center gap-1.5 ml-1 normal-case tracking-normal" style={{ color: "var(--ink-faint)" }}>
             <span className="w-1 h-1 rounded-full cep-pulse" style={{ background: "var(--spark)" }} />
             open to graduate roles
@@ -1708,16 +1708,10 @@ const Hero = ({ onNavigate }) => {
           Growth is engineered.
         </h1>
       </Reveal>
-
+      
       <Reveal delay={160}>
         <p className="mt-6 max-w-2xl text-base md:text-lg font-medium leading-relaxed tracking-[-0.005em]" style={{ color: "var(--ink-soft)" }}>
-          Neo is a Civil Engineering graduate from the University of the 
-          Witwatersrand and an ECSA Candidate Engineer with consulting 
-          experience in transport planning and infrastructure design. His 
-          academic and professional work has provided a foundation for 
-          tackling complex infrastructure challenges. He is motivated by 
-          continuous self-improvement and is focused on building the 
-          technical expertise required to become a Professional Engineer.
+          
         </p>
       </Reveal>
 
@@ -1745,14 +1739,7 @@ const Hero = ({ onNavigate }) => {
       </Reveal>
 
       <Reveal delay={320}>
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px max-w-2xl" style={{ background: "var(--line)" }}>
-          {STATS.map((s) => (
-            <div key={s.label} className="p-5" style={{ background: "var(--surface)" }}>
-              <div className="font-display text-3xl font-semibold" style={{ color: "var(--ink)" }}>{s.value}</div>
-              <div className="mt-1 font-mono text-[11px] uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
+        
       </Reveal>
 
       <button
@@ -1773,7 +1760,7 @@ const Hero = ({ onNavigate }) => {
 /* About                                                                */
 /* ------------------------------------------------------------------ */
 const About = () => (
-  <section id="about" className="py-28 md:py-40" style={{ background: "var(--surface-alt)" }}>
+  <section id="about" className="py-28 md:py-26" style={{ background: "var(--surface-alt)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8">
       <Reveal><SectionEyebrow index={2} total={8}>About</SectionEyebrow></Reveal>
 

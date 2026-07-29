@@ -2120,7 +2120,7 @@ const Resume = () => (
               <div className="text-sm" style={{ color: "var(--ink-soft)" }}>Graduate Civil Engineer</div>
             </div>
             <div className="font-mono text-[11px] text-right" style={{ color: "var(--ink-faint)" }}>
-              neomatsietsa1@gmail.com<br />+27 64 024 7250
+              neomatsietsa1@gmail.com
             </div>
           </div>
 
@@ -2178,7 +2178,7 @@ const Contact = ({ dark }) => {
         <Reveal><SectionEyebrow index={8} total={8}>Contact</SectionEyebrow></Reveal>
         <Reveal delay={60}>
           <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
-            Let's talk about a graduate role.
+            Let's connect.
           </h2>
         </Reveal>
 
@@ -2187,90 +2187,129 @@ const Contact = ({ dark }) => {
             <a href="mailto:neomatsietsa1@gmail.com" className="cep-focus flex items-center gap-3 text-sm cep-card cep-card-hover p-5" style={{ color: "var(--ink)" }}>
               <Mail size={16} style={{ color: "var(--accent)" }} /> neomatsietsa1@gmail.com
             </a>
-            <a href="tel:+27640247250" className="cep-focus flex items-center gap-3 text-sm cep-card cep-card-hover p-5" style={{ color: "var(--ink)" }}>
-              <Phone size={16} style={{ color: "var(--accent)" }} /> +27 64 024 7250
-            </a>
+            <a 
+              href="https://linkedin.com/in/neomatsietsa" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="cep-focus flex items-center gap-3 text-sm cep-card cep-card-hover p-5" 
+              style={{ color: "var(--ink)" }}
+            >
+              <Linkedin size={16} className="shrink-0 w-4 h-4" style={{ color: "var(--accent)" }} /> 
+              LinkedIn.com/in/neomatsietsa
+          </a>
             <div className="flex items-center gap-3 text-sm cep-card p-5" style={{ color: "var(--ink)" }}>
-              <MapPin size={16} style={{ color: "var(--ink-faint)" }} /> Hatfield, Pretoria
+              <MapPin size={16} style={{ color: "var(--ink-faint)" }} /> Johannesburg, Gauteng
             </div>
             <div className="flex gap-3 pt-2">
-              <a href="https://linkedin.com/in/neomatsietsa" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="cep-focus cep-icon-btn w-10 h-10 flex items-center justify-center rounded-full" style={{ color: "var(--ink)" }}>
-                <Linkedin size={16} />
-              </a>
-              <a href="https://neomatsietsa.my.canva.site/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio link" className="cep-focus cep-icon-btn w-10 h-10 flex items-center justify-center rounded-full" style={{ color: "var(--ink)" }}>
-                <ExternalLink size={16} />
-              </a>
+              
+              
             </div>
-                <div className="aspect-video w-full mt-2 overflow-hidden rounded-xl" style={{ border: "1px solid var(--line)" }}>
-                  <iframe
-                    title="Map of Hatfield, Pretoria"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, filter: dark ? "invert(90%) hue-rotate(180deg)" : "none" }}
-                    loading="lazy"
-                    allowFullScreen
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src="https://maps.google.com/maps?q=Hatfield,%20Pretoria&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                  />
-                </div>
+          <div className="aspect-video w-full mt-2 overflow-hidden rounded-xl" style={{ border: "1px solid var(--line)" }}>
+            <iframe
+              title="Map of Parktown, Johannesburg"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: dark ? "invert(90%) hue-rotate(180deg)" : "none" }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src="https://maps.google.com/maps?q=-26.1810,28.0460&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            />
+          </div>
           </Reveal>
 
-          <Reveal delay={160} className="md:col-span-3 cep-card p-7 md:p-9">
-            {sent ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-10">
-                <CheckCircle2 size={28} style={{ color: "var(--accent)" }} />
-                <div className="font-display text-xl font-semibold mt-4" style={{ color: "var(--ink)" }}>Message ready.</div>
-                <p className="mt-2 text-sm max-w-xs" style={{ color: "var(--ink-soft)" }}>
-                  This form is a UI placeholder — connect it to your email
-                  service or a form backend to actually receive messages.
-                </p>
-                <button onClick={() => setSent(false)} className="cep-btn-outline cep-focus mt-6 px-5 py-2.5 text-sm">
-                  Back to form
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={submit} className="space-y-5">
-                <div>
-                  <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>Name</label>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent"
-                    style={{ color: "var(--ink)" }}
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>Email</label>
-                  <input
-                    required
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent"
-                    style={{ color: "var(--ink)" }}
-                    placeholder="you@company.com"
-                  />
-                </div>
-                <div>
-                  <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>Message</label>
-                  <textarea
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent resize-none"
-                    style={{ color: "var(--ink)" }}
-                    placeholder="Tell me about the role..."
-                  />
-                </div>
-                <button type="submit" className="cep-btn-primary cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2">
-                  Send message <Send size={14} className="cep-btn-icon" />
-                </button>
-              </form>
-            )}
-          </Reveal>
+                      <Reveal delay={160} className="md:col-span-3 cep-card p-7 md:p-9">
+                {sent ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center py-10">
+                    <CheckCircle2 size={28} style={{ color: "var(--accent)" }} />
+                    <div className="font-display text-xl font-semibold mt-4" style={{ color: "var(--ink)" }}>
+                      Message sent!
+                    </div>
+                    <p className="mt-2 text-sm max-w-xs" style={{ color: "var(--ink-soft)" }}>
+                      Thanks for reaching out. I'll get back to you as soon as possible.
+                    </p>
+                    <button 
+                      onClick={() => {
+                        setSent(false);
+                        setForm({ name: "", email: "", message: "" });
+                      }} 
+                      className="cep-btn-outline cep-focus mt-6 px-5 py-2.5 text-sm"
+                    >
+                      Send another message
+                    </button>
+                  </div>
+                ) : (
+                  <form 
+                    action="https://formspree.io/f/mnjerdor" 
+                    method="POST"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const response = await fetch(e.target.action, {
+                        method: "POST",
+                        body: new FormData(e.target),
+                        headers: { Accept: "application/json" }
+                      });
+                      if (response.ok) {
+                        setSent(true);
+                      } else {
+                        alert("Oops! There was a problem submitting your form.");
+                      }
+                    }} 
+                    className="space-y-5"
+                  >
+                    <div>
+                      <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>
+                        Name
+                      </label>
+                      <input
+                        required
+                        name="name"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent"
+                        style={{ color: "var(--ink)" }}
+                        placeholder="Your name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>
+                        Email
+                      </label>
+                      <input
+                        required
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent"
+                        style={{ color: "var(--ink)" }}
+                        placeholder="you@company.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-mono text-xs uppercase tracking-wide" style={{ color: "var(--ink-faint)" }}>
+                        Message
+                      </label>
+                      <textarea
+                        required
+                        name="message"
+                        rows={5}
+                        value={form.message}
+                        onChange={(e) => setForm({ ...form, message: e.target.value })}
+                        className="cep-focus cep-input mt-2 w-full px-4 py-3 text-sm bg-transparent resize-none"
+                        style={{ color: "var(--ink)" }}
+                        placeholder="Let's start a conversation..."
+                      />
+                    </div>
+
+                    <button type="submit" className="cep-btn-primary cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2">
+                      Send message <Send size={14} className="cep-btn-icon" />
+                    </button>
+                  </form>
+                )}
+              </Reveal>
         </div>
       </div>
     </section>

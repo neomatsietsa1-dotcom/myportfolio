@@ -1270,8 +1270,8 @@ const PROJECTS = [
     image: "/images/TSFLayout.webp",
     image2: "/images/TSFPhoto.webp",
     icon: GraduationCap,
-    category: "Final Year Project / Geotechnical",
-    title: "Tailings Storage Facility - Upstream Design",
+    category: "Final Year Project (Geotechnical)",
+    title: "Tailings Storage Facility",
     summary:
       "Final-year design of an upstream tailings storage facility, using Civil 3D for geometry and RocScience Slide2 for seepage and slope stability analysis.",
     role: "Researcher / designer",
@@ -1372,14 +1372,11 @@ const SKILL_GROUPS = [
     items: [
       { name: "AutoCAD", level: 74 },
       { name: "Civil 3D", level: 85 },
-      { name: "ArcGIS", level: 78 },
+      { name: "QGIS", level: 78 },
+      { name: "ArcGIS", level: 71 },
       { name: "Traffix", level: 82 },
       { name: "Prokon", level: 75 },
-      { name: "RocScience Slide2", level: 68 },
-      { name: "GeoStudio", level: 62 },
-      { name: "HEC-RAS", level: 60 },
-      { name: "EPANET", level: 60 },
-      { name: "MATLAB / Python", level: 65 },
+      
     ],
   },
   {
@@ -1388,9 +1385,9 @@ const SKILL_GROUPS = [
       { name: "Transport Planning & TIAs", level: 85 },
       { name: "Geotechnical Engineering", level: 75 },
       { name: "Structural & Concrete Design", level: 72 },
-      { name: "Water Resources", level: 65 },
+      { name: "Road Design", level: 75 },
       { name: "SANS / TMH & TRH Design Codes", level: 78 },
-      { name: "Report Writing & Tenders", level: 82 },
+      { name: "Report Writing", level: 95 },
     ],
   },
   {
@@ -1399,9 +1396,20 @@ const SKILL_GROUPS = [
       { name: "Teamwork", level: 90 },
       { name: "Adaptability", level: 88 },
       { name: "Accountability", level: 85 },
-      { name: "Interpersonal Skills", level: 84 },
+      { name: "People Skills", level: 84 },
       { name: "Fast Learner", level: 88 },
       { name: "Versatility", level: 80 },
+    ],
+  },
+  {
+    title: "Other",
+    items: [
+     
+      { name: "RocScience Slide2", level: 68 },
+      { name: "GeoStudio", level: 62 },
+      { name: "HEC-RAS", level: 60 },
+      { name: "EPANET", level: 60 },
+      { name: "MATLAB / Python", level: 65 },
     ],
   },
 ];
@@ -1880,10 +1888,17 @@ const About = () => (
 /* ------------------------------------------------------------------ */
 /* Projects                                                           */
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* Projects                                                           */
+/* ------------------------------------------------------------------ */
 const ProjectCard = ({ project, open, onToggle, delay }) => {
   const Icon = project.icon;
   return (
-    <Reveal delay={delay} className="cep-card cep-card-hover">
+    <Reveal
+      id={`project-card-${project.id}`}
+      delay={delay}
+      className="cep-card cep-card-hover scroll-mt-24"
+    >
       <div className="p-6 md:p-7">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -1940,18 +1955,10 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
           ))}
         </div>
 
-        {/* 
-          1. will-change: grid-template-rows pushes this transition onto the GPU.
-          2. content-visibility: hidden when closed stops the browser from running
-             layout/paint calculations for invisible DOM nodes.
-        */}
+        {/* Shorter 350ms duration makes sequential closing feel snappy */}
         <div
-          className="grid overflow-hidden transition-all duration-350 ease-out"
-          style={{
-            gridTemplateRows: open ? "1fr" : "0fr",
-            willChange: "grid-template-rows",
-            contentVisibility: open ? "visible" : "hidden",
-          }}
+          className="grid overflow-hidden transition-all duration-350 ease-in-out"
+          style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
         >
           <div className="min-h-0">
             <div
@@ -1988,6 +1995,7 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
     </Reveal>
   );
 };
+
 const ProjectField = ({ label, text }) => (
   <div>
     <div
@@ -2029,37 +2037,31 @@ const Projects = () => {
   const [openId, setOpenId] = useState(PROJECTS[0].id);
 
   const handleToggleCard = (targetId) => {
-    const isOpening = openId !== targetId;
-    setOpenId(isOpening ? targetId : null);
+    // If clicking the currently open card, just close it
+    if (openId === targetId) {
+      setOpenId(null);
+      return;
+    }
 
-    if (isOpening) {
+    // Step 1: Immediately close whatever card is currently open
+    const hadOpenCard = Boolean(openId);
+    setOpenId(null);
+
+    // Step 2: If a card was open, wait 320ms for its closing animation to finish
+    // so there's never two cards animating/squishing at the exact same time.
+    const delayBeforeOpening = hadOpenCard ? 320 : 0;
+
+    setTimeout(() => {
+      setOpenId(targetId);
+
+      // Step 3: Smoothly glide the newly opened card under the navbar
       setTimeout(() => {
         const el = document.getElementById(`project-card-${targetId}`);
-        if (!el) return;
-
-        const navHeight = 96; // ~96px clearance for your sticky navbar + breathing room
-        const startTime = performance.now();
-        const duration = 500; // Matches your 500ms grid overflow transition
-
-        // This animation loop actively tracks the top of the card every frame
-        // as the previous card collapses, ensuring it never overshoots.
-        const lockScrollToCard = (now) => {
-          const rect = el.getBoundingClientRect();
-          const offset = rect.top - navHeight;
-
-          // Only nudge if it's off by more than 1px to prevent jitter
-          if (Math.abs(offset) > 1) {
-            window.scrollBy({ top: offset, behavior: "auto" });
-          }
-
-          if (now - startTime < duration) {
-            requestAnimationFrame(lockScrollToCard);
-          }
-        };
-
-        requestAnimationFrame(lockScrollToCard);
-      }, 10);
-    }
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 40);
+    }, delayBeforeOpening);
   };
 
   return (
@@ -2075,15 +2077,13 @@ const Projects = () => {
             className="font-display text-3xl md:text-4xl font-semibold max-w-2xl"
             style={{ color: "var(--ink)" }}
           >
-            Case studies, not just a gallery.
+            Explore the engineering work I've completed so far.
           </h2>
           <p
             className="mt-4 max-w-xl leading-relaxed"
             style={{ color: "var(--ink-soft)" }}
           >
-            Seven projects spanning transport planning, geotechnical and
-            structural design - each one expands into the full brief,
-            process and outcome.
+            Each project expands into a detailed overview of the challenge, engineering approach and outcome.
           </p>
         </Reveal>
 
@@ -2112,7 +2112,7 @@ const Skills = () => (
       <Reveal><SectionEyebrow index={4} total={8}>Skills</SectionEyebrow></Reveal>
       <Reveal delay={60}>
         <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
-          Tools and judgement, side by side.
+          The engineering tools and skills I've developed along the way.
         </h2>
       </Reveal>
 
@@ -2184,7 +2184,7 @@ const Certifications = () => (
       <Reveal><SectionEyebrow index={6} total={8}>Certifications</SectionEyebrow></Reveal>
       <Reveal delay={60}>
         <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
-          Credentials on file.
+          Professional certifications, training and achievements.
         </h2>
       </Reveal>
 

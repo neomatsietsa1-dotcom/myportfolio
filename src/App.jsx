@@ -159,14 +159,15 @@ const ThemeStyles = () => (
       background-position: -1px -1px;
       -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 96%);
       mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 96%);
-      animation: cep-grid-drift 8s linear infinite;
+      /* 4s duration across 80px maintains the exact fast speed without any visual jump */
+      animation: cep-grid-drift 4s linear infinite;
     }
-    /* Shifts by exactly one minor-grid cell (16px, which also evenly divides the
-       80px major grid) so the loop point is invisible - it reads as one continuous
-       leftward scroll with no reset jump. linear + infinite = never slows, never stops. */
+    
+    /* Shift by -80px (-1px to -81px) so both the 16px minor grid 
+       and 80px major grid complete a full tile cycle simultaneously. */
     @keyframes cep-grid-drift{
       0%   { background-position: -1px -1px; }
-      100% { background-position: -17px -1px; }
+      100% { background-position: -81px -1px; }
     }
     .cep-blueprint-bg-subtle{
       background-image:
@@ -1876,14 +1877,13 @@ const About = () => (
 /* ------------------------------------------------------------------ */
 /* Projects                                                           */
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* Projects                                                           */
+/* ------------------------------------------------------------------ */
 const ProjectCard = ({ project, open, onToggle, delay }) => {
   const Icon = project.icon;
   return (
-    <Reveal
-      id={`project-card-${project.id}`}
-      delay={delay}
-      className="cep-card cep-card-hover scroll-mt-24"
-    >
+    <Reveal delay={delay} className="cep-card cep-card-hover">
       <div className="p-6 md:p-7">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -1940,9 +1940,18 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
           ))}
         </div>
 
+        {/* 
+          1. will-change: grid-template-rows pushes this transition onto the GPU.
+          2. content-visibility: hidden when closed stops the browser from running
+             layout/paint calculations for invisible DOM nodes.
+        */}
         <div
-          className="grid overflow-hidden transition-all duration-500 ease-in-out"
-          style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+          className="grid overflow-hidden transition-all duration-350 ease-out"
+          style={{
+            gridTemplateRows: open ? "1fr" : "0fr",
+            willChange: "grid-template-rows",
+            contentVisibility: open ? "visible" : "hidden",
+          }}
         >
           <div className="min-h-0">
             <div
@@ -1979,7 +1988,6 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
     </Reveal>
   );
 };
-
 const ProjectField = ({ label, text }) => (
   <div>
     <div

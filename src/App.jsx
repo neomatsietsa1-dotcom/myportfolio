@@ -1,4 +1,5 @@
 
+
 function DynamicImageGallery({ project }) {
   const [aspects, setAspects] = useState([]);
   const imageSources = [project.image, project.image2, project.image3].filter(Boolean);
@@ -44,6 +45,7 @@ function DynamicImageGallery({ project }) {
               alt={`${project.title} ${index + 1}`}
               className="w-full h-auto max-h-[550px] object-contain rounded-xl"
               placeholder="Project image"
+              border
             />
           </div>
         ))}
@@ -54,7 +56,10 @@ function DynamicImageGallery({ project }) {
 
 
 
+
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu, X, Sun, Moon, ArrowRight, Download, Mail,
   MapPin, ExternalLink, Compass, ChevronDown, ChevronUp, Phone,
@@ -354,8 +359,9 @@ const Reveal = ({ as: Tag = "div", id, className = "", delay = 0, children }) =>
 /* of a broken-image icon, so nothing looks broken while you're still   */
 /* deciding on photos.                                                  */
 /* ------------------------------------------------------------------ */
-const ImageSlot = ({ src, alt = "", className = "", placeholder = "Photo placeholder" }) => {
+const ImageSlot = ({ src, alt = "", className = "", placeholder = "Photo placeholder", border = false }) => {
   const [failed, setFailed] = useState(false);
+
   if (failed) {
     return (
       <div
@@ -366,13 +372,31 @@ const ImageSlot = ({ src, alt = "", className = "", placeholder = "Photo placeho
       </div>
     );
   }
+
   return (
-    <img
-      src={src}
-      alt={alt}
-      onError={() => setFailed(true)}
-      className={`object-cover ${className}`}
-    />
+    <div className={`relative overflow-hidden select-none ${className}`}>
+      {/* 1. Normal image */}
+      <img
+        src={src}
+        alt={alt}
+        onError={() => setFailed(true)}
+        draggable="false"
+        className="w-full h-full object-cover pointer-events-none"
+      />
+
+      {/* 2. Invisible shield to block right-clicks and dragging */}
+      <div
+        className="absolute inset-0 z-10 bg-transparent"
+        onContextMenu={(e) => e.preventDefault()}
+      />
+
+      {/* 3. Black border — ONLY appears if border={true} is passed */}
+      {border && (
+        <div 
+          className="absolute inset-0 z-20 pointer-events-none rounded-[inherit] border border-black" 
+        />
+      )}
+    </div>
   );
 };
 
@@ -783,7 +807,7 @@ function PadFooting(props) {
 function IBeamSection(props) {
   return (
     <svg viewBox="0 0 100 120" stroke="#30332E" strokeWidth="1.5" fill="none" {...props}>
-      <path d="M 20,10 L 80,10 L 80,20 L 55,20 Q 50,20 50,25 L 50,95 Q 50,100 55,100 L 80,100 L 80,110 L 20,110 L 20,100 L 45,100 Q 50,100 50,95 L 50,25 Q 50,20 45,20 L 20,20 Z" />
+      <path d="M 20,10 L 80,10 L 80,20 L 55,20 Q 50,20 50,25 L 50,95 Q 50,100 55,100 L 80,100 L 80,110 L 20,110 L 20,100 L 45,100 Q 50,100 50,95 L 50,25 Q 50,20 45,20 L 20,20" />
       <line x1="10" y1="60" x2="90" y2="60" strokeDasharray="6 3 2 3" />
       <line x1="50" y1="0" x2="50" y2="120" strokeDasharray="6 3 2 3" />
     </svg>
@@ -843,7 +867,7 @@ function RoadHorizontalAlignment(props) {
 function SurveyTripod(props) {
   return (
     <svg viewBox="0 0 120 160" stroke="#30332E" strokeWidth="1.5" fill="none" {...props}>
-      <polyline points="40,30 80,30 75,40 45,40 Z" />
+      <polyline points="40,30 80,30 75,40 45,40" />
       <line x1="50" y1="40" x2="20" y2="140" />
       <line x1="55" y1="40" x2="35" y2="140" />
       <line x1="70" y1="40" x2="100" y2="140" />
@@ -851,7 +875,7 @@ function SurveyTripod(props) {
       <line x1="60" y1="40" x2="60" y2="130" />
       <rect x="45" y="15" width="30" height="15" />
       <circle cx="60" cy="10" r="5" />
-      <path d="M 60,40 L 60,80 L 58,85 L 60,90 L 62,85 Z" strokeDasharray="1 2" />
+      <path d="M 60,40 L 60,80 L 58,85 L 60,90 L 62,85" strokeDasharray="1 2" />
       <line x1="10" y1="140" x2="110" y2="140" />
     </svg>
   );
@@ -860,10 +884,10 @@ function SurveyTripod(props) {
 function TopographicContours(props) {
   return (
     <svg viewBox="0 0 200 200" stroke="#30332E" strokeWidth="1.5" fill="none" {...props}>
-      <path d="M 20,80 C 40,20 140,20 180,80 C 200,120 160,180 100,180 C 40,180 0,120 20,80 Z" />
-      <path d="M 40,85 C 55,40 125,40 155,85 C 170,115 140,160 95,160 C 50,160 25,120 40,85 Z" strokeDasharray="4 2" />
-      <path d="M 60,90 C 70,60 110,60 130,90 C 140,110 120,140 90,140 C 65,140 50,110 60,90 Z" />
-      <path d="M 80,95 C 85,75 105,75 115,95 C 120,105 110,125 95,125 C 80,125 75,105 80,95 Z" strokeDasharray="4 2" />
+      <path d="M 20,80 C 40,20 140,20 180,80 C 200,120 160,180 100,180 C 40,180 0,120 20,80" />
+      <path d="M 40,85 C 55,40 125,40 155,85 C 170,115 140,160 95,160 C 50,160 25,120 40,85" strokeDasharray="4 2" />
+      <path d="M 60,90 C 70,60 110,60 130,90 C 140,110 120,140 90,140 C 65,140 50,110 60,90" />
+      <path d="M 80,95 C 85,75 105,75 115,95 C 120,105 110,125 95,125 C 80,125 75,105 80,95" strokeDasharray="4 2" />
       <line x1="90" y1="100" x2="100" y2="110" />
       <line x1="100" y1="100" x2="90" y2="110" />
     </svg>
@@ -924,7 +948,7 @@ function TowerCrane(props) {
 function RetainingWall(props) {
   return (
     <svg viewBox="0 0 160 160" stroke="#30332E" strokeWidth="1.5" fill="none" {...props}>
-      <polyline points="40,20 60,20 60,120 130,120 130,140 20,140 20,120 40,120 Z" />
+      <polyline points="40,20 60,20 60,120 130,120 130,140 20,140 20,120 40,120" />
       <line x1="60" y1="30" x2="150" y2="30" />
       <line x1="20" y1="100" x2="10" y2="100" />
       <line x1="100" y1="30" x2="80" y2="50" />
@@ -1073,7 +1097,8 @@ const NAV_ITEMS = [
   { id: "skills", label: "Skills" },
   { id: "experience", label: "Experience" },
   { id: "certifications", label: "Certifications" },
-  { id: "resume", label: "Resume" },
+  { id: "road-ahead", label: "Road Ahead" },
+  { id: "CV", label: "CV" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -1198,7 +1223,7 @@ const PROJECTS = [
   {
     id: "mandlakazi",
     image: "/images/Site1.jpg",
-     image2: "/images/Site2.jpg",
+     image2: "/images/Site2.webp",
     icon: Waves,
     category: "Infrastructure / Access Road Design",
     title: "Mandlakazi Road Design - Zululand Municipality, KZN",
@@ -1267,7 +1292,7 @@ const PROJECTS = [
   },
   {
     id: "tsf",
-    image: "/images/TSFLayout.webp",
+    image: "/images/TSFLayout.jpg",
     image2: "/images/TSFPhoto.webp",
     icon: GraduationCap,
     category: "Final Year Project (Geotechnical)",
@@ -1371,19 +1396,19 @@ const SKILL_GROUPS = [
     title: "Engineering Software",
     items: [
       { name: "AutoCAD", level: 74 },
-      { name: "Civil 3D", level: 85 },
-      { name: "QGIS", level: 78 },
-      { name: "ArcGIS", level: 71 },
-      { name: "Traffix", level: 82 },
+      { name: "Civil 3D", level: 72 },
+      { name: "QGIS", level: 70 },
+      { name: "ArcGIS", level: 76 },
       { name: "Prokon", level: 75 },
+      { name: "Traffix", level: 82 },
       
     ],
   },
   {
     title: "Engineering Knowledge",
     items: [
-      { name: "Transport Planning & TIAs", level: 85 },
-      { name: "Geotechnical Engineering", level: 75 },
+      { name: "Transport Planning & TIAs", level: 82 },
+      { name: "TSF Design", level: 75 },
       { name: "Structural & Concrete Design", level: 72 },
       { name: "Road Design", level: 75 },
       { name: "SANS / TMH & TRH Design Codes", level: 78 },
@@ -1393,9 +1418,9 @@ const SKILL_GROUPS = [
   {
     title: "Professional Skills",
     items: [
+      { name: "Accountability", level: 85 },
       { name: "Teamwork", level: 90 },
       { name: "Adaptability", level: 88 },
-      { name: "Accountability", level: 85 },
       { name: "People Skills", level: 84 },
       { name: "Fast Learner", level: 88 },
       { name: "Versatility", level: 80 },
@@ -1416,35 +1441,54 @@ const SKILL_GROUPS = [
 
 const EXPERIENCE = [
   {
-    year: "Feb 2026 - Present",
-    title: "Civil Engineering Intern, OAR Consultants (formerly Koleko Solutions)",
+    id: "oar-engineer",
+    year: "July 2026 - Present",
+    title: "Civil Engineer, OAR Consultants (formerly Koleko Solutions)",
     detail:
-      "Supporting transport planning and traffic engineering projects - TIAs, masterplans, parking studies, road closures and BRT integrated transport planning. Site visits, traffic surveys and Traffix analysis, layouts in AutoCAD and GIS, and technical reports, tenders and proposals.",
+      "I contribute to infrastructure projects through technical investigations, engineering analysis and project deliverables. Drawing on the experience gained since joining OAR Consultants, my work includes Traffic Impact Assessments, Transport Master Plans, parking studies, engineering layouts, technical reports and tender submissions.",
+    tag: "Consulting",
+    image: "/images/experience/oar-engineer.jpg",
+  },
+  {
+    id: "oar-internship",
+    year: "Feb - July 2026",
+    title: "Civil Engineering Intern, OAR Consultants",
+    detail:
+      "Joined OAR Consultants to gain practical experience in consulting engineering, supporting multidisciplinary infrastructure projects while developing skills in field investigations, technical analysis, engineering documentation and project delivery under the guidance of experienced engineers.",
     tag: "Internship",
+    image: "/images/experience/oar-internship.jpg",
   },
   {
+    id: "esports-captain",
     year: "2025",
-    title: "Captain, Wits Esports Team",
-    detail: "Led the university's competitive esports team, including its FC League squad.",
+    title: "Captain, Wits E-Sports",
+    detail: "Served as Captain of the Wits E-Sports FC Team, helping create a positive environment where players could perform at their best while representing the university in competitive play.",
     tag: "Leadership",
+    image: "/images/experience/esports-captain.jpg",
   },
   {
+    id: "geotech-lab",
     year: "Aug - Sep 2025",
     title: "Geotechnical Lab Assistant, University of the Witwatersrand",
     detail: "Supported a master's research project on pavement design for heavy-duty mine trucks, running CBR and UCS soil and material testing.",
     tag: "Research",
+    image: "/images/experience/geotech-lab.webp",
   },
   {
+    id: "vacation-work",
     year: "Jul - Oct 2025",
     title: "Vacation Work, University of the Witwatersrand",
-    detail: "Worked with the Head of School to extend and optimise a rainwater harvesting system - design improvements, performance monitoring and remote monitoring via CR-Basic programming. Also curated the Cement & Concrete SA archive for the school.",
-    tag: "Research",
+    detail: "Worked with the Head of School to extend and optimise a rainwater harvesting system - design improvements, performance monitoring and remote monitoring via CR-Basic programming.",
+    tag: "Apprenticeship",
+    image: "/images/experience/vacation-work.jpg",
   },
   {
+    id: "assistant-teacher",
     year: "Apr 2021 - Feb 2022",
     title: "Assistant Teacher, Shudintlhe Intermediate School",
-    detail: "Supported classroom teaching and learner development ahead of starting university.",
+    detail: "Supported teaching and learner development before starting university.",
     tag: "Teaching",
+    image: "/images/experience/assistant-teacher.png",
   },
 ];
 
@@ -1626,6 +1670,9 @@ const Nav = ({ active, onNavigate, dark, setDark }) => {
   );
 };
 
+
+
+
 /* ------------------------------------------------------------------ */
 /* Hero                                                                 */
 /* ------------------------------------------------------------------ */
@@ -1678,97 +1725,99 @@ function generateHeroComposition() {
 const Hero = ({ onNavigate }) => {
   const [composition] = useState(generateHeroComposition);
   const heroRef = useRef(null);
+
   return (
-<section id="home" ref={heroRef} className="relative w-full h-[100dvh] max-h-[100dvh] pt-24 flex flex-col overflow-hidden cep-blueprint-bg cep-hero-clip">
-    {/* CAD crosshair - replaces the OS cursor with a full crosshair + live
-        X/Y readout (Hero centre = 0,0) while hovering this section. Pure
-        transform/textContent writes from a rAF loop; no re-renders. */}
-    <CadCrosshair containerRef={heroRef} />
+    /* Changed h-[100dvh] to min-h-[100svh] h-[100svh] and added transform-gpu */
+    <section 
+      id="home" 
+      ref={heroRef} 
+      className="relative w-full min-h-[100svh] h-[100svh] pt-24 flex flex-col overflow-hidden cep-blueprint-bg cep-hero-clip transform-gpu"
+    >
+      {/* CAD crosshair - replaces the OS cursor with a full crosshair + live
+          X/Y readout (Hero centre = 0,0) while hovering this section. Pure
+          transform/textContent writes from a rAF loop; no re-renders. */}
+      <CadCrosshair containerRef={heroRef} />
 
-    {/* corner registration marks */}
-    <div className="hidden md:block absolute top-24 left-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>A</div>
-    <div className="hidden md:block absolute top-24 right-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>B</div>
+      {/* corner registration marks */}
+      <div className="hidden md:block absolute top-24 left-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>A</div>
+      <div className="hidden md:block absolute top-24 right-6 font-mono text-[10px]" style={{ color: "var(--ink-faint)" }}>B</div>
 
-    {/* engineering watermarks - scattered freely across the whole Hero (not pinned
-        to edges), drifting continuously via sine-wave motion and easing away from
-        the cursor within ~240px via a critically-damped spring blended on top of
-        the drift. cep-hero-clip keeps everything inside the section regardless of
-        where a drawing lands or drifts to; cep-watermark-responsive hides them on
-        small screens where there's no room to breathe. */}
-    {composition.map((w) => (
-      <Watermark
-        key={w.key}
-        variant={w.variant}
-        size={w.size}
-        seed={w.seed}
-        initialRotate={w.initialRotate}
-        className="cep-watermark-responsive"
-        style={{ top: w.top, left: w.left }}
-      />
-    ))}
+      {/* engineering watermarks */}
+      {composition.map((w) => (
+        <Watermark
+          key={w.key}
+          variant={w.variant}
+          size={w.size}
+          seed={w.seed}
+          initialRotate={w.initialRotate}
+          className="cep-watermark-responsive"
+          style={{ top: w.top, left: w.left }}
+        />
+      ))}
 
-    <div className="max-w-6xl w-full mx-auto my-auto px-5 md:px-8 relative" style={{ zIndex: 2 }}>
-      <Reveal>
-        <div className="flex items-center gap-3 mb-6 font-mono text-xs tracking-widest uppercase" style={{ color: "var(--accent-ink)" }}>
-          <Compass size={14} />
-          ECSA Candidate Engineer (Civil)
-          <span className="inline-flex items-center gap-1.5 ml-1 normal-case tracking-normal" style={{ color: "var(--ink-faint)" }}>
-            <span className="w-1 h-1 rounded-full cep-pulse" style={{ background: "var(--spark)" }} />
-            open to graduate roles
-          </span>
-        </div>
-      </Reveal>
+      {/* Added transform-gpu to the main content wrapper */}
+      <div className="max-w-6xl w-full mx-auto my-auto px-5 md:px-8 relative transform-gpu" style={{ zIndex: 2 }}>
+        <Reveal>
+          <div className="flex items-center gap-3 mb-6 font-mono text-xs tracking-widest uppercase" style={{ color: "var(--accent-ink)" }}>
+            <Compass size={14} />
+            ECSA Candidate Engineer (Civil)
+            <span className="inline-flex items-center gap-1.5 ml-1 normal-case tracking-normal" style={{ color: "var(--ink-faint)" }}>
+              <span className="w-1 h-1 rounded-full cep-pulse" style={{ background: "var(--spark)" }} />
+              open to graduate roles
+            </span>
+          </div>
+        </Reveal>
 
-      <Reveal delay={80}>
-        <h1 className="font-display font-semibold tracking-tight leading-[1.03] text-5xl md:text-7xl max-w-4xl" style={{ color: "var(--ink)" }}>
-          Growth is engineered.
-        </h1>
-      </Reveal>
-      
-      <Reveal delay={160}>
-        <p className="mt-6 max-w-2xl text-base md:text-lg font-medium leading-relaxed tracking-[-0.005em]" style={{ color: "var(--ink-soft)" }}>
-          
-        </p>
-      </Reveal>
-
-      <Reveal delay={240}>
-        <div className="mt-9 flex flex-wrap gap-3">
-          <button
-            onClick={() => onNavigate("projects")}
-            className="cep-btn-primary cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
-          >
-            View Projects <ArrowRight size={15} className="cep-btn-icon" />
-          </button>
-          <button
-            onClick={() => onNavigate("resume")}
-            className="cep-btn-outline cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
-          >
-            <Download size={15} className="cep-btn-icon" /> Download Resume
-          </button>
-          <button
-            onClick={() => onNavigate("contact")}
-            className="cep-btn-outline cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
-          >
-            Contact Me
-          </button>
-        </div>
-      </Reveal>
-
-      <Reveal delay={320}>
+        <Reveal delay={80}>
+          <h1 className="font-display font-semibold tracking-tight leading-[1.03] text-5xl md:text-7xl max-w-4xl" style={{ color: "var(--ink)" }}>
+            Growth is engineered.
+          </h1>
+        </Reveal>
         
-      </Reveal>
+        <Reveal delay={160}>
+          <p className="mt-6 max-w-2xl text-base md:text-lg font-medium leading-relaxed tracking-[-0.005em]" style={{ color: "var(--ink-soft)" }}>
+            
+          </p>
+        </Reveal>
 
-      <button
-        onClick={() => onNavigate("about")}
-        aria-label="Scroll to about section"
-        className="cep-focus mt-16 flex items-center gap-2 font-mono text-xs uppercase tracking-widest"
-        style={{ color: "var(--ink-faint)" }}
-      >
-        Scroll
-        <ChevronDown size={14} className="animate-bounce" />
-      </button>
-    </div>
-  </section>
+        <Reveal delay={240}>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <button
+              onClick={() => onNavigate("projects")}
+              className="cep-btn-primary cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
+            >
+              View Projects <ArrowRight size={15} className="cep-btn-icon" />
+            </button>
+            <button
+              onClick={() => onNavigate("CV")}
+              className="cep-btn-outline cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
+            >
+              <Download size={15} className="cep-btn-icon" /> Download CV
+            </button>
+            <button
+              onClick={() => onNavigate("contact")}
+              className="cep-btn-outline cep-focus px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2"
+            >
+              Contact Me
+            </button>
+          </div>
+        </Reveal>
+
+        <Reveal delay={320}>
+          
+        </Reveal>
+
+        <button
+          onClick={() => onNavigate("about")}
+          aria-label="Scroll to about section"
+          className="cep-focus mt-16 flex items-center gap-2 font-mono text-xs uppercase tracking-widest"
+          style={{ color: "var(--ink-faint)" }}
+        >
+          Scroll
+          <ChevronDown size={14} className="animate-bounce" />
+        </button>
+      </div>
+    </section>
   );
 };
 
@@ -1778,12 +1827,12 @@ const Hero = ({ onNavigate }) => {
 const About = () => (
   <section id="about" className="py-28 md:py-26" style={{ background: "var(--surface-alt)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8">
-      <Reveal><SectionEyebrow index={2} total={8}>About</SectionEyebrow></Reveal>
+      <Reveal><SectionEyebrow index={2} total={9}>About</SectionEyebrow></Reveal>
 
       <div className="grid md:grid-cols-5 gap-12 mt-8">
         <Reveal className="md:col-span-2" delay={60}>
           <ImageSlot
-            src="/images/GraduationPotrait2.jpg"
+            src="/images/GraduationPotrait.jpg"
             alt="Portrait"
             className="aspect-[4/5] w-full cep-card overflow-hidden"
             placeholder="Photo placeholder - 4:5. Add public/images/profile.jpg to fill this."
@@ -1806,29 +1855,28 @@ const About = () => (
     className="font-display text-3xl md:text-4xl font-semibold"
     style={{ color: "var(--ink)" }}
   >
-    Engineering begins with understanding.
+    Building a foundation.
   </h2>
 
   <p
     className="mt-6 leading-[1.75] max-w-2xl"
     style={{ color: "var(--ink-soft)" }}
   >
-    I'm an ECSA Candidate Engineer and Civil Engineering graduate from the
-    University of the Witwatersrand, currently working at OAR Consultants.
-    My work focuses on transport planning, traffic engineering and
-    infrastructure studies, where technical analysis informs practical
-    engineering decisions.
+    I'm a Civil Engineering graduate from the University of the Witwatersrand and an ECSA
+     Candidate Engineer with consulting experience in transport planning and road infrastructure design. 
+     My academic and professional experience has provided a strong foundation for tackling complex 
+     infrastructure challenges. I'm committed to continuous self-improvement and focused on building the 
+     technical knowledge, judgement and experience required to become a well-equipped engineer.
   </p>
 
   <p
     className="mt-5 leading-[1.75] max-w-2xl"
     style={{ color: "var(--ink-soft)" }}
   >
-    I enjoy projects where engineering decisions shape how people move,
-    travel and interact with infrastructure. Whether analysing a road
-    network, assessing future traffic demand or planning long-term transport
-    improvements, I value work that balances technical rigour with practical
-    outcomes.
+    Growing up in a rural community showed me how infrastructure affects quality of life. 
+    That experience inspired my journey into engineering, and it continues to drive me today.
+     I aspire to work on projects that create lasting value for communities while challenging me to become a 
+     better engineer with every opportunity.
   </p>
 
   <div className="mt-8">
@@ -1965,6 +2013,7 @@ const ProjectCard = ({ project, open, onToggle, delay }) => {
               className="mt-6 pt-6 space-y-5"
               style={{ borderTop: "1px solid var(--line-soft)" }}
             >
+              
               <DynamicImageGallery project={project} />
 
               <div
@@ -2068,7 +2117,7 @@ const Projects = () => {
     <section id="projects" className="relative py-28 md:py-40 overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 md:px-8 relative">
         <Reveal>
-          <SectionEyebrow index={3} total={8}>
+          <SectionEyebrow index={3} total={9}>
             Projects
           </SectionEyebrow>
         </Reveal>
@@ -2109,7 +2158,7 @@ const Projects = () => {
 const Skills = () => (
   <section id="skills" className="py-28 md:py-40" style={{ background: "var(--surface-alt)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8">
-      <Reveal><SectionEyebrow index={4} total={8}>Skills</SectionEyebrow></Reveal>
+      <Reveal><SectionEyebrow index={4} total={9}>Skills</SectionEyebrow></Reveal>
       <Reveal delay={60}>
         <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
           The engineering tools and skills I've developed along the way.
@@ -2140,40 +2189,107 @@ const Skills = () => (
 
 /* ------------------------------------------------------------------ */
 /* Experience                                                           */
-/* ------------------------------------------------------------------ */
-const Experience = () => (
-  <section id="experience" className="py-28 md:py-40">
-    <div className="max-w-6xl mx-auto px-5 md:px-8">
-      <Reveal><SectionEyebrow index={5} total={8}>Experience</SectionEyebrow></Reveal>
-      <Reveal delay={60}>
-        <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
-          Beyond the classroom.
-        </h2>
-      </Reveal>
+/* ------------------------------------------------------------------ 
+*/
+const Experience = () => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
-      <div className="mt-12 max-w-3xl">
-        {EXPERIENCE.map((e, i) => (
-          <Reveal key={e.title} delay={i * 60}>
-            <div className="flex gap-6 pb-10 relative">
-              <div className="flex flex-col items-center flex-shrink-0 w-20">
-                <span className="font-mono text-xs" style={{ color: "var(--ink-faint)" }}>{e.year}</span>
-                <span className="w-2.5 h-2.5 rounded-full mt-2" style={{ background: "var(--accent)" }} />
-                {i !== EXPERIENCE.length - 1 && <span className="flex-1 w-px mt-2" style={{ background: "var(--line)" }} />}
-              </div>
-              <div className="pb-2">
-                <span className="cep-pill">
-                  {e.tag}
-                </span>
-                <div className="font-medium mt-3" style={{ color: "var(--ink)" }}>{e.title}</div>
-                <div className="text-sm mt-1.5 leading-relaxed" style={{ color: "var(--ink-soft)" }}>{e.detail}</div>
-              </div>
-            </div>
-          </Reveal>
-        ))}
+  return (
+    <section id="experience" className="py-28 md:py-40">
+      <div className="max-w-6xl mx-auto px-5 md:px-8">
+        <Reveal><SectionEyebrow index={5} total={9}>Experience</SectionEyebrow></Reveal>
+        <Reveal delay={60}>
+          <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
+            Beyond the classroom.
+          </h2>
+        </Reveal>
+
+        {/* Updated gap to give both columns room to breathe */}
+        <div className="mt-12 flex flex-col md:flex-row gap-10 md:gap-16 items-start">
+          
+          {/* LEFT COLUMN: Changed from max-w-2xl to flex-1 so text expands horizontally */}
+          <div className="flex-1 w-full" onMouseLeave={() => setHoveredIndex(null)}>
+            {EXPERIENCE.map((e, i) => (
+              <Reveal key={e.id} delay={i * 60}>
+                <div
+                  tabIndex={0}
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onFocus={() => setHoveredIndex(i)}
+                  className="cep-focus flex gap-6 pb-10 relative outline-none"
+                  style={{
+                    transform: hoveredIndex === i ? "translateY(-5px)" : "translateY(0)",
+                    transition: "transform 450ms " + `cubic-bezier(${ROAD_EASE.join(",")})`,
+                  }}
+                >
+                  <div className="flex flex-col items-center flex-shrink-0 w-20">
+                    <span className="font-mono text-xs" style={{ color: "var(--ink-faint)" }}>{e.year}</span>
+                    <span className="w-2.5 h-2.5 rounded-full mt-2" style={{ background: "var(--accent)" }} />
+                    {i !== EXPERIENCE.length - 1 && <span className="flex-1 w-px mt-2" style={{ background: "var(--line)" }} />}
+                  </div>
+                  <div className="pb-2">
+                    <span className="cep-pill">
+                      {e.tag}
+                    </span>
+                    <div className="font-medium mt-3 text-base md:text-lg" style={{ color: "var(--ink)" }}>{e.title}</div>
+                    <div className="text-sm md:text-base mt-1.5 leading-relaxed" style={{ color: "var(--ink-soft)" }}>{e.detail}</div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* RIGHT COLUMN: Increased container (width: 380, height: 500) & cards (width: 320) */}
+          <div
+            className="hidden md:block relative flex-shrink-0"
+            style={{ width: 380, height: 500, position: "sticky", top: 120 }}
+          >
+            {EXPERIENCE.map((e, i) => {
+              const isActive = hoveredIndex === i;
+              return (
+                <motion.div
+                  key={e.id}
+                  className="absolute left-1/2 top-4"
+                  style={{ zIndex: isActive ? 50 : EXPERIENCE.length - i }}
+                  initial={false}
+                  animate={{
+                    x: "-50%",
+                    y: isActive ? -18 : i * 14,
+                    scale: isActive ? 1.04 : 0.96,
+                    opacity: isActive || hoveredIndex == null ? 1 : 0.5,
+                  }}
+                  transition={{ duration: 0.6, ease: ROAD_EASE }}
+                >
+                  <div
+                    className="p-3 flex-shrink-0"
+                    style={{
+                      width: 320, /* Scaled up from 260px */
+                      background: "var(--surface-raised)",
+                      border: "1px solid var(--line-soft)",
+                      borderRadius: 10,
+                      boxShadow: isActive
+                        ? "0 28px 48px -16px rgba(10,11,8,0.32)"
+                        : "0 12px 24px -12px rgba(10,11,8,0.18)",
+                      transition: "box-shadow 600ms ease",
+                    }}
+                  >
+                    {/* Aspect ratio stays exactly 4/5 while scaling up cleanly */}
+                    <div style={{ width: "100%", aspectRatio: "4 / 5", overflow: "hidden", borderRadius: 6 }}>
+                      <ImageSlot src={e.image} alt={e.title} placeholder="Photo" className="w-full h-full" />
+                    </div>
+                    <div className="mt-3 font-mono text-[11px] tracking-widest uppercase" style={{ color: "var(--ink-faint)" }}>
+                      {e.tag} · {e.year}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ------------------------------------------------------------------ */
 /* Certifications                                                       */
@@ -2181,7 +2297,7 @@ const Experience = () => (
 const Certifications = () => (
   <section id="certifications" className="py-28 md:py-40" style={{ background: "var(--surface-alt)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8">
-      <Reveal><SectionEyebrow index={6} total={8}>Certifications</SectionEyebrow></Reveal>
+      <Reveal><SectionEyebrow index={6} total={9}>Certifications</SectionEyebrow></Reveal>
       <Reveal delay={60}>
         <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
           Professional certifications, training and achievements.
@@ -2203,17 +2319,373 @@ const Certifications = () => (
 );
 
 /* ------------------------------------------------------------------ */
-/* Resume                                                               */
+/* Road Ahead — "The milestones continue, even if they haven't been    */
+/* defined yet."                                                       */
+/*                                                                      */
+/* No card, no container — the line and its checkpoints are the only   */
+/* thing here, floating directly on the page. Nothing is "off" by      */
+/* default, it's simply out of focus: faint, slightly soft, at rest.   */
+/* Hover a checkpoint and it — and the line itself — pull upward       */
+/* together, like tension travelling along a plucked string, settling  */
+/* back down the same slow way. A supporting photo and a short caption */
+/* surface above it, staggered, then ease back out. Future checkpoints */
+/* sit further out of focus the further out they are — a mist with no  */
+/* hard edge, because the trajectory doesn't have one either.          */
 /* ------------------------------------------------------------------ */
-const Resume = () => (
-  <section id="resume" className="py-28 md:py-40">
+const ROAD_MILESTONES = [
+  {
+    id: "matric",
+    dateLabel: "Matric",
+    year: "2020",
+    title: "Matriculation",
+    detail: "Completed Matric in Itsoseng, North-West, with a focus on mathematics and physical sciences.",
+    icon: GraduationCap,
+    image: null,
+  },
+  {
+    id: "wits-start",
+    dateLabel: "BSc (Eng)",
+    year: "2022",
+    title: "Started BSc Eng (Civil), Wits",
+    detail: "Began my undergraduate studies in Civil Engineering at Wits University.",
+    icon: GraduationCap,
+    image: null,
+  },
+  {
+    id: "wits-grad",
+    dateLabel: "Graduation",
+    year: "2025",
+    title: "Graduated BSc Eng (Civil), Wits",
+    detail: "Graduated with a BSc in Civil Engineering from the University of the Witwatersrand.",
+    icon: Award,
+    image: null,
+  },
+  {
+    id: "oar-practice",
+    dateLabel: "Candidate Eng",
+    year: "2026",
+    title: "ECSA Candidate Engineer",
+    detail: "Registered as an ECSA Candidate Engineer and began professional consulting practice at OAR Consultants.",
+    icon: Briefcase,
+    image: "/images/milestones/ecsa-candidate.PNG",
+    current: true,
+  },
+  {
+  id: "pr-eng",
+  dateLabel: "Pr. Eng",
+  year: "Ahead",
+  title: "Professional Registration",
+  detail: "Obtaining Professional Registration with ECSA.",
+  icon: Award,
+  image: null,
+  future: true,
+},
+{
+  id: "trusted-engineer",
+  dateLabel: "Expertise",
+  year: "Ahead",
+  title: "Trusted Specialist",
+  detail: "Becoming the engineer people know and rely on for solving complex problems within a specialist area of civil engineering.",
+  icon: Building2,
+  image: null,
+  future: true,
+},
+{
+  id: "horizon",
+  dateLabel: "Horizon",
+  year: "Future",
+  title: "The Journey Continues",
+  detail: "The path ahead remains open, with future milestones still waiting to be defined.",
+  icon: Compass,
+  image: null,
+  future: true,
+  horizon: true,
+},
+];
+  
+
+
+const ROAD_EASE = [0.22, 1, 0.36, 1];
+const WAVE_FALLOFF = [1, 0.46, 0.18, 0.05];
+const STIFFNESS = 46;
+const DAMPING = 15;
+
+function smoothPath(points) {
+  if (points.length < 2) return "";
+  const p = points;
+  let d = `M ${p[0][0]},${p[0][1]}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] || p[i];
+    const p1 = p[i];
+    const p2 = p[i + 1];
+    const p3 = p[i + 2] || p2;
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+
+function useStringWave(activeIndex, totalCount) {
+  const springs = useRef(
+    Array.from({ length: totalCount }, () => ({ value: 0, velocity: 0 }))
+  );
+  const nodeEls = useRef([]);
+  const pathPastRef = useRef(null);
+  const pathFutureRef = useRef(null);
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    springs.current = Array.from({ length: totalCount }, () => ({ value: 0, velocity: 0 }));
+  }, [totalCount]);
+
+  const setNodeRef = (i) => (el) => {
+    nodeEls.current[i] = el;
+  };
+
+  useEffect(() => {
+    const targets = springs.current.map((_, j) => {
+      if (activeIndex == null) return 0;
+      const dist = Math.abs(j - activeIndex);
+      return WAVE_FALLOFF[dist] ?? 0;
+    });
+
+    let last = performance.now();
+
+    const paint = () => {
+      const W = 1000, BASELINE_Y = 70, MAX_LIFT = 30;
+      const pts = springs.current.map((s, i) => [
+        (i / (totalCount - 1)) * W,
+        BASELINE_Y - s.value * MAX_LIFT,
+      ]);
+
+      const pathD = smoothPath(pts);
+      if (pathPastRef.current) pathPastRef.current.setAttribute("d", pathD);
+      if (pathFutureRef.current) pathFutureRef.current.setAttribute("d", pathD);
+
+      springs.current.forEach((s, i) => {
+        const el = nodeEls.current[i];
+        if (!el) return;
+        const liftPx = s.value * MAX_LIFT;
+        const focus = s.value;
+        // Uses translate3d to force smooth GPU rendering for both dot and label
+        el.style.transform = `translate3d(0, ${(-liftPx).toFixed(2)}px, 0) scale(${(1 + focus * 0.25).toFixed(3)})`;
+      });
+    };
+
+    const step = (now) => {
+      const dt = Math.min(0.045, (now - last) / 1000);
+      last = now;
+      let settled = true;
+      springs.current.forEach((s, j) => {
+        const target = targets[j] || 0;
+        const force = (target - s.value) * STIFFNESS - s.velocity * DAMPING;
+        s.velocity += force * dt;
+        s.value += s.velocity * dt;
+        if (Math.abs(target - s.value) > 0.0008 || Math.abs(s.velocity) > 0.0008) settled = false;
+      });
+      paint();
+      rafRef.current = settled ? null : requestAnimationFrame(step);
+    };
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [activeIndex, totalCount]);
+
+  return { setNodeRef, pathPastRef, pathFutureRef };
+}
+
+const roadCaptionVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: ROAD_EASE } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.35, ease: ROAD_EASE } },
+};
+
+const RoadAhead = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const totalCount = ROAD_MILESTONES.length;
+  const currentIndex = ROAD_MILESTONES.findIndex((m) => m.current);
+  const safeCurrentIndex = currentIndex >= 0 ? currentIndex : 0;
+  const splitX = totalCount > 1 ? (safeCurrentIndex / (totalCount - 1)) * 1000 : 0;
+
+  const { setNodeRef, pathPastRef, pathFutureRef } = useStringWave(activeIndex, totalCount);
+  const active = activeIndex == null ? null : ROAD_MILESTONES[activeIndex];
+
+  return (
+    <section
+      id="road-ahead"
+      className="relative w-full h-[100dvh] max-h-[100dvh] pt-24 flex flex-col overflow-hidden"
+    >
+      <style>{`
+        @keyframes cep-road-float{
+          0%, 100%{ transform: translateY(0px); }
+          50%{ transform: translateY(-7px); }
+        }
+        .cep-road-float{ animation: cep-road-float 6.5s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce){
+          .cep-road-float{ animation:none; }
+        }
+      `}</style>
+
+      <div className="max-w-6xl mx-auto px-5 md:px-8 w-full flex-1 flex flex-col min-h-0">
+        <Reveal><SectionEyebrow index={7} total={9}>Road Ahead</SectionEyebrow></Reveal>
+        <Reveal delay={60}>
+          <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
+            One project at a time.
+          </h2>
+        </Reveal>
+
+        {/* Caption Zone */}
+        <div className="flex-1 flex items-center justify-center min-h-0">
+          <AnimatePresence mode="wait">
+            {active && (
+              <motion.div
+                key={active.id}
+                variants={roadCaptionVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="flex items-center gap-6 md:gap-8 text-left"
+              >
+                {active.image && (
+                  <div
+                    className="flex-shrink-0 overflow-hidden"
+                    style={{ width: 220, height: 150, borderRadius: 6, boxShadow: "var(--shadow-card)" }}
+                  >
+                    <ImageSlot src={active.image} alt={active.title} placeholder="Photo" className="w-full h-full" />
+                  </div>
+                )}
+                <div style={{ maxWidth: 340 }}>
+
+                {/* Displays ONLY the year tag here (e.g. 2020, 2026, Ahead) */}
+                <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "var(--accent-ink)" }}>
+                  {active.year}
+                </div>
+
+                  <div className="mt-1 text-base font-medium leading-snug" style={{ color: "var(--ink)" }}>
+                    {active.title}
+                  </div>
+                  <div className="mt-1.5 text-sm leading-relaxed" style={{ color: "var(--ink-soft)" }}>
+                    {active.detail}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* the line — restricted to 2/3 width and centered */}
+        <div className="pb-16 md:pb-24 flex-shrink-0 flex justify-center w-full">
+          <div
+            className="cep-road-float relative w-full max-w-[66%] mx-auto"
+            style={{ height: 120 }}
+            onMouseLeave={() => setActiveIndex(null)}
+          >
+            <svg
+              className="absolute inset-0 w-full h-full"
+              style={{ filter: "drop-shadow(0 10px 14px rgba(10,11,8,0.06))" }}
+              viewBox="0 0 1000 120"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <clipPath id="road-clip-past" clipPathUnits="userSpaceOnUse">
+                  <rect x="0" y="0" width={splitX} height="120" />
+                </clipPath>
+                <clipPath id="road-clip-future" clipPathUnits="userSpaceOnUse">
+                  <rect x={splitX} y="0" width={1000 - splitX} height="120" />
+                </clipPath>
+              </defs>
+              <path ref={pathPastRef} d="" fill="none" stroke="var(--line)" strokeWidth="1.5" clipPath="url(#road-clip-past)" />
+              <path
+                ref={pathFutureRef}
+                d=""
+                fill="none"
+                stroke="var(--ink-faint)"
+                strokeWidth="1.5"
+                strokeDasharray="1 7"
+                strokeLinecap="round"
+                opacity="0.8"
+                clipPath="url(#road-clip-future)"
+              />
+            </svg>
+
+            <div className="relative h-full">
+
+              
+              {ROAD_MILESTONES.map((m, i) => {
+                const Icon = m.icon;
+                const isCurrent = !!m.current;
+                const stepsPastNow = safeCurrentIndex >= 0 ? Math.max(0, i - safeCurrentIndex) : 0;
+                // Stronger fog decay (0.28 per step) and a much lower visibility floor (0.08)
+                const mist = m.future ? Math.max(0.08, Math.pow(0.68, stepsPastNow)) : 1;
+                const color = isCurrent ? "var(--accent)" : m.future ? "var(--ink-faint)" : "var(--ink)";
+                const percentPosition = totalCount > 1 ? (i / (totalCount - 1)) * 100 : 50;
+
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onMouseEnter={() => setActiveIndex(i)}
+                    onFocus={() => setActiveIndex(i)}
+                    onClick={() => setActiveIndex(i)}
+                    aria-label={`${m.title} — ${m.dateLabel}`}
+                    aria-pressed={activeIndex === i}
+                    className="cep-focus absolute bg-transparent border-0 p-0 cursor-pointer flex flex-col items-center"
+                    style={{
+                      left: `${percentPosition}%`,
+                      top: 70,
+                      transform: "translate(-50%, -50%)",
+                      opacity: mist,
+                    }}
+                  >
+                    {/* GPU-Accelerated Wrapper: Dot, Icon, AND Date Label all move together smoothly */}
+                    <div ref={setNodeRef(i)} style={{ willChange: "transform" }} className="flex flex-col items-center">
+                      <span
+                        className="rounded-full flex items-center justify-center"
+                        style={{
+                          width: isCurrent ? 15 : 10,
+                          height: isCurrent ? 15 : 10,
+                          background: m.future ? "var(--surface)" : color,
+                          border: `1.5px ${m.horizon ? "dashed" : "solid"} ${color}`,
+                          boxShadow: activeIndex === i ? "0 0 0 8px var(--accent-soft)" : "none",
+                          transition: "box-shadow 500ms ease",
+                        }}
+                      />
+                      <Icon size={12} className="mt-2 hidden md:block" style={{ color: "var(--ink-faint)" }} />
+                      <span
+                      className="mt-2 md:mt-3 font-mono text-[6px] sm:text-[8px] md:text-[10px] tracking-tighter md:tracking-widest uppercase text-center max-w-[40px] md:max-w-none whitespace-normal md:whitespace-nowrap leading-tight"
+                      style={{ color: "var(--ink-faint)" }}
+                    >
+                      {m.dateLabel}
+                    </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+
+const CV = () => (
+  <section id="CV" className="py-28 md:py-40">
     <div className="max-w-6xl mx-auto px-5 md:px-8">
-      <Reveal><SectionEyebrow index={7} total={8}>Resume</SectionEyebrow></Reveal>
+      <Reveal><SectionEyebrow index={8} total={9}>CV</SectionEyebrow></Reveal>
 
       <div className="grid md:grid-cols-3 gap-10 mt-8">
         <Reveal className="md:col-span-1">
           <h2 className="font-display text-3xl font-semibold" style={{ color: "var(--ink)" }}>
-            A concise summary. The full story is one click away.
+            A concise summary.
           </h2>
           <p className="mt-4 text-sm leading-[1.75]" style={{ color: "var(--ink-soft)" }}>
             Download a copy of my updated CV.
@@ -2253,19 +2725,41 @@ const Resume = () => (
 
           <div className="mt-6">
             <div className="font-mono text-xs uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>Experience</div>
-            {EXPERIENCE.slice(0, 3).map((e) => (
-              <div key={e.title} className="flex justify-between text-sm py-1.5" style={{ borderBottom: "1px solid var(--line-soft)" }}>
-                <span style={{ color: "var(--ink)" }}>{e.title}</span>
-                <span className="font-mono text-xs" style={{ color: "var(--ink-faint)" }}>{e.year}</span>
-              </div>
-            ))}
+            {EXPERIENCE
+  .filter((e) => e.id !== "esports-captain" && e.id !== "assistant-teacher")
+  .map((e) => (
+    <div
+      key={e.title}
+      className="flex justify-between text-sm py-1.5"
+      style={{ borderBottom: "1px solid var(--line-soft)" }}
+    >
+      <span style={{ color: "var(--ink)" }}>{e.title}</span>
+      
+      {/* min-w-[75px] protects short dates from being squished by long job titles */}
+      <span
+        className="font-mono text-xs text-right min-w-[75px] ml-2"
+        style={{ color: "var(--ink-faint)" }}
+      >
+        {e.year}
+      </span>
+    </div>
+  ))}
           </div>
 
           <div className="mt-6">
-            <div className="font-mono text-xs uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>Key skills</div>
+            <div className="font-mono text-xs uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}
+            >Key skills
+            </div>
             <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
-              {SKILL_GROUPS.flatMap((g) => g.items.slice(0, 3).map((i) => i.name)).join(" · ")}
-            </p>
+            {SKILL_GROUPS
+              .filter((g) => g.title !== "Other") // 1. Remove the "Other" group completely
+              .flatMap((g) =>
+                g.title === "Engineering Software"
+                  ? g.items.map((i) => i.name) // 2. Show ALL items for "Engineering Software"
+                  : g.items.slice(0, 3).map((i) => i.name) // 3. Keep showing top 3 for remaining groups
+              )
+              .join(" · ")}
+          </p>
           </div>
 
           <div className="mt-6 text-sm italic" style={{ color: "var(--ink-faint)" }}>
@@ -2292,7 +2786,7 @@ const Contact = ({ dark }) => {
   return (
     <section id="contact" className="py-28 md:py-40" style={{ background: "var(--surface-alt)" }}>
       <div className="max-w-6xl mx-auto px-5 md:px-8 relative">
-        <Reveal><SectionEyebrow index={8} total={8}>Contact</SectionEyebrow></Reveal>
+        <Reveal><SectionEyebrow index={9} total={9}>Contact</SectionEyebrow></Reveal>
         <Reveal delay={60}>
           <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl" style={{ color: "var(--ink)" }}>
             Let's connect.
@@ -2321,18 +2815,22 @@ const Contact = ({ dark }) => {
               
               
             </div>
-          <div className="aspect-video w-full mt-2 overflow-hidden rounded-xl" style={{ border: "1px solid var(--line)" }}>
-            <iframe
-              title="Map of Parktown, Johannesburg"
-              width="100%"
-              height="100%"
-              style={{ border: 0, filter: dark ? "invert(90%) hue-rotate(180deg)" : "none" }}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src="https://maps.google.com/maps?q=-26.1810,28.0460&t=&z=14&ie=UTF8&iwloc=&output=embed"
-            />
-          </div>
+          <div className="aspect-video w-full mt-2 overflow-hidden rounded-xl relative" style={{ border: "1px solid var(--line)" }}>
+  <iframe
+    title="Boundary Map of Johannesburg"
+    width="100%"
+    height="100%"
+    style={{
+      border: 0,
+      filter: dark ? "invert(90%) hue-rotate(180deg)" : "none"
+    }}
+    loading="lazy"
+    allowFullScreen
+    referrerPolicy="no-referrer-when-downgrade"
+    /* Passing 'q=Johannesburg,South+Africa' draws the municipality boundary instead of a coordinate pin */
+    src="https://maps.google.com/maps?q=Johannesburg,South+Africa&z=10&output=embed"
+  />
+</div>
           </Reveal>
 
                       <Reveal delay={160} className="md:col-span-3 cep-card p-7 md:p-9">
@@ -2437,10 +2935,10 @@ const Contact = ({ dark }) => {
 /* Footer                                                               */
 /* ------------------------------------------------------------------ */
 const Footer = () => (
-  <footer className="py-10" style={{ borderTop: "1px solid var(--line)" }}>
+  <footer className="py-4" style={{ borderTop: "1px solid var(--line)" }}>
     <div className="max-w-6xl mx-auto px-5 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]" style={{ color: "var(--ink-faint)" }}>
-      <span>© {new Date().getFullYear()} Neo Matsietsa. Drawing set for informational purposes only.</span>
-      <span>Built with React &amp; Tailwind - DWG REV 0</span>
+      <span>© {new Date().getFullYear()} Neo Matsietsa. All rights reserved.</span>
+      
     </div>
   </footer>
 );
@@ -2462,23 +2960,48 @@ const BackToTop = ({ visible, onClick }) => (
 );
 
 /* ------------------------------------------------------------------ */
-/* Reading progress                                                     */
+/* Reading progress                                                   */
 /* ------------------------------------------------------------------ */
 const ReadingProgress = () => {
-  const [pct, setPct] = useState(0);
+  const barRef = useRef(null);
+
   useEffect(() => {
+    let animationFrameId;
+
     const onScroll = () => {
-      const h = document.documentElement;
-      const scrolled = h.scrollTop;
-      const height = h.scrollHeight - h.clientHeight;
-      setPct(height > 0 ? (scrolled / height) * 100 : 0);
+      animationFrameId = requestAnimationFrame(() => {
+        const h = document.documentElement;
+        const scrolled = h.scrollTop || window.scrollY;
+        const height = h.scrollHeight - h.clientHeight;
+        const pct = height > 0 ? (scrolled / height) * 100 : 0;
+
+        // Directly update DOM width (0 lag, 0 React re-renders)
+        if (barRef.current) {
+          barRef.current.style.width = `${pct}%`;
+        }
+      });
     };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll(); // Set initial position immediately on load
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, []);
+
   return (
     <div className="fixed top-0 left-0 right-0 h-0.5 z-[60]" style={{ background: "transparent" }}>
-      <div className="h-full" style={{ width: `${pct}%`, background: "var(--accent)", transition: "width .1s linear" }} />
+      <div
+        ref={barRef}
+        className="h-full"
+        style={{
+          width: "0%",
+          background: "var(--accent)",
+          willChange: "width", // GPU acceleration for ultra-smooth movement
+        }}
+      />
     </div>
   );
 };
@@ -2531,7 +3054,9 @@ export default function CivilEngineeringPortfolio() {
         <Skills />
         <Experience />
         <Certifications />
-        <Resume />
+
+        <RoadAhead />
+        <CV />
         <Contact dark={dark} />
       </main>
       <Footer />

@@ -1156,7 +1156,7 @@ const VALUES = [
 const PROJECTS = [
   {
     id: "protea-glen",
-    image: "/images/FullProtea.webp",
+    image: "/images/projects/protea-glen-1.webp",
     icon: Compass,
     category: "Transport Planning / Master Plan",
     title: "Protea Glen Transport Master Plan - Gauteng",
@@ -1189,7 +1189,7 @@ const PROJECTS = [
   },
   {
     id: "road-alignment",
-    image: "/images/Horiz+Vert.png",
+    image: "/images/projects/road-alignment-geometry.png",
     icon: Ruler,
     category: "Transportation Engineering / Road Design",
     title: "Road Alignment Design - SANRAL Guidelines",
@@ -1222,8 +1222,8 @@ const PROJECTS = [
   },
   {
     id: "mandlakazi",
-    image: "/images/Site1.jpg",
-     image2: "/images/Site2.webp",
+    image: "/images/projects/mandlakazi-site-1.jpg",
+    image2: "/images/projects/mandlakazi-site-2.webp",
     icon: Waves,
     category: "Infrastructure / Access Road Design",
     title: "Mandlakazi Road Design - Zululand Municipality, KZN",
@@ -1256,10 +1256,9 @@ const PROJECTS = [
   },
   {
     id: "rc-building",
-    image3: "/images/Column.png",
-    image: "/images/Floor Slab.png",
-        image2: "/images/Foundation.png",
-
+    image: "/images/projects/rc-building-floor-slab.png",
+    image2: "/images/projects/rc-building-foundation.png",
+    image3: "/images/projects/rc-building-column.png",
     icon: Layers,
     category: "Reinforced Concrete Design",
     title: "Multi-Storey Building - Reinforced Concrete Design",
@@ -1292,8 +1291,8 @@ const PROJECTS = [
   },
   {
     id: "tsf",
-    image: "/images/TSFLayout.jpg",
-    image2: "/images/TSFPhoto.webp",
+    image: "/images/projects/tsf-layout.jpg",
+    image2: "/images/projects/tsf-laptop-photo.webp",
     icon: GraduationCap,
     category: "Final Year Project (Geotechnical)",
     title: "Tailings Storage Facility",
@@ -1301,7 +1300,7 @@ const PROJECTS = [
       "Final-year design of an upstream tailings storage facility, using Civil 3D for geometry and RocScience Slide2 for seepage and slope stability analysis.",
     role: "Researcher / designer",
     duration: "University of the Witwatersrand - final year",
-    software: ["Civil 3D", "AutoCAD","RocScience Slide2"],
+    software: ["Civil 3D", "AutoCAD", "RocScience Slide2"],
     overview:
       "A final-year geotechnical design project developing an upstream tailings storage facility (TSF), from embankment geometry through to seepage and slope stability analysis.",
     problem:
@@ -1324,9 +1323,9 @@ const PROJECTS = [
     lessons:
       "This project sharpened my interest in geotechnical engineering, and set up my later work as a geotechnical lab assistant testing materials for pavement design.",
   },
-   {
+  {
     id: "school-tia",
-        icon: HardHat,
+    icon: HardHat,
     category: "Traffic Impact Assessment / Master Plan",
     title: "School for the Deaf and Blind - TIA & Masterplan, Mpumalanga",
     summary:
@@ -1358,7 +1357,6 @@ const PROJECTS = [
   },
   {
     id: "tshivhulani",
-
     icon: Building2,
     category: "Traffic Impact Assessment",
     title: "Tshivhulani Mall - Traffic Impact Assessment, Limpopo",
@@ -1389,7 +1387,7 @@ const PROJECTS = [
     lessons:
       "Retail TIAs taught me to be precise about trip-generation assumptions - small errors there compound quickly through an intersection simulation.",
   },
-];
+]
 
 const SKILL_GROUPS = [
   {
@@ -1832,7 +1830,7 @@ const About = () => (
       <div className="grid md:grid-cols-5 gap-12 mt-8">
         <Reveal className="md:col-span-2" delay={60}>
           <ImageSlot
-            src="/images/GraduationPotrait.jpg"
+            src="/images/about/graduation-portrait.jpg"
             alt="Portrait"
             className="aspect-[4/5] w-full cep-card overflow-hidden"
             placeholder="Photo placeholder - 4:5. Add public/images/profile.jpg to fill this."

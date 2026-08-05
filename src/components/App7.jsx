@@ -379,8 +379,6 @@ const ImageSlot = ({ src, alt = "", className = "", placeholder = "Photo placeho
       <img
         src={src}
         alt={alt}
-        loading="lazy"        /* <-- Tells the browser to wait until the image is scrolled near viewport */
-        decoding="async"      /* <-- Prevents image decoding from freezing UI animations */
         onError={() => setFailed(true)}
         draggable="false"
         className="w-full h-full object-cover pointer-events-none"
